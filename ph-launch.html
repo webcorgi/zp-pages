@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZeroPack — Product Hunt 런칭 킷</title>
+<style>
+  :root {
+    --bg: #0f0f11;
+    --surface: #1a1a1f;
+    --border: #2a2a32;
+    --accent: #ff6154;
+    --accent2: #f0a500;
+    --text: #e8e8f0;
+    --muted: #888899;
+    --green: #22c55e;
+    --blue: #3b82f6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 40px 20px;
+  }
+  .container { max-width: 860px; margin: 0 auto; }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--accent); color: #fff;
+    font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    padding: 4px 12px; border-radius: 20px; margin-bottom: 16px;
+  }
+  h1 { font-size: 36px; font-weight: 800; margin-bottom: 8px; }
+  h1 span { color: var(--accent); }
+  .subtitle { font-size: 16px; color: var(--muted); margin-bottom: 48px; }
+
+  .section { margin-bottom: 40px; }
+  .section-title {
+    font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--accent); border-bottom: 1px solid var(--border);
+    padding-bottom: 8px; margin-bottom: 20px;
+  }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px;
+  }
+  .card + .card { margin-top: 16px; }
+
+  .field-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 8px;
+  }
+  .field-value {
+    font-size: 15px; color: var(--text);
+  }
+  .field-value.highlight {
+    font-size: 20px; font-weight: 700; color: var(--accent2);
+    background: #1f1a0a; border: 1px solid #3a2e0a;
+    border-radius: 8px; padding: 14px 18px;
+    font-style: italic;
+  }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+  .tag {
+    background: #1e1e2a; border: 1px solid var(--border);
+    border-radius: 20px; padding: 4px 14px;
+    font-size: 13px; color: var(--text);
+  }
+
+  pre {
+    background: #0a0a0d; border: 1px solid var(--border);
+    border-radius: 10px; padding: 20px;
+    font-size: 14px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word;
+    color: #c8c8d8; font-family: 'SF Mono', 'Consolas', monospace;
+    position: relative;
+  }
+  .copy-btn {
+    position: absolute; top: 12px; right: 12px;
+    background: var(--border); border: none; color: var(--muted);
+    font-size: 11px; padding: 4px 10px; border-radius: 6px;
+    cursor: pointer; letter-spacing: 0.5px;
+    transition: background 0.2s;
+  }
+  .copy-btn:hover { background: var(--accent); color: #fff; }
+
+  .screenshot-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;
+  }
+  .screenshot-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden;
+  }
+  .screenshot-header {
+    background: #12121a; padding: 12px 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .screenshot-num {
+    width: 26px; height: 26px; background: var(--accent);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0;
+  }
+  .screenshot-title { font-size: 13px; font-weight: 600; }
+  .screenshot-body { padding: 14px 16px; }
+  .screenshot-url {
+    font-size: 11px; color: var(--blue);
+    background: #0d1929; border: 1px solid #1a2d4a;
+    border-radius: 6px; padding: 6px 10px;
+    font-family: monospace; word-break: break-all;
+    display: block; text-decoration: none;
+  }
+  .screenshot-url:hover { color: #60a5fa; }
+  .screenshot-note { font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+  .strategy-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+  @media (max-width: 600px) { .strategy-grid { grid-template-columns: 1fr; } }
+  .strategy-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 20px;
+  }
+  .strategy-icon { font-size: 24px; margin-bottom: 10px; }
+  .strategy-title { font-size: 13px; font-weight: 700; margin-bottom: 6px; color: var(--accent2); }
+  .strategy-text { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  .timing-box {
+    background: linear-gradient(135deg, #1a0f0f 0%, #0f0f1a 100%);
+    border: 1px solid #3a1a1a; border-radius: 12px; padding: 24px;
+    text-align: center;
+  }
+  .timing-label { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  .timing-time { font-size: 28px; font-weight: 800; color: var(--accent); }
+  .timing-sub { font-size: 14px; color: var(--muted); margin-top: 4px; }
+
+  .checklist { list-style: none; }
+  .checklist li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 14px; color: var(--text); padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li::before {
+    content: '☐'; font-size: 16px; color: var(--muted);
+    flex-shrink: 0; margin-top: 1px;
+  }
+
+  .divider { height: 1px; background: var(--border); margin: 40px 0; }
+  footer { text-align: center; font-size: 12px; color: var(--muted); padding-top: 16px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="badge">🚀 Product Hunt Launch Kit</div>
+  <h1>ZeroPack <span>런칭 자료</span></h1>
+  <p class="subtitle">Product Hunt 제출 준비 완료 · 작성일 2026-04-01</p>
+
+  <!-- 1. 기본 정보 -->
+  <div class="section">
+    <div class="section-title">01 — 기본 정보</div>
+    <div class="card">
+      <div class="field-label">Product Name</div>
+      <div class="field-value" style="font-size:22px;font-weight:700;margin-bottom:20px;">ZeroPack</div>
+
+      <div class="field-label">Website</div>
+      <div class="field-value" style="margin-bottom:20px;">
+        <a href="https://zpack.app" style="color:var(--blue);">https://zpack.app</a>
+      </div>
+
+      <div class="field-label">Topics</div>
+      <div class="tags">
+        <span class="tag">No-Code</span>
+        <span class="tag">Landing Page Builder</span>
+        <span class="tag">Web Development</span>
+        <span class="tag">SaaS</span>
+        <span class="tag">Open Source</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <div class="field-label">Tagline (60자 이내)</div>
+      <div class="field-value highlight">
+        "Buy once. Own forever. Deploy your landing page in 3 minutes."
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Description -->
+  <div class="section">
+    <div class="section-title">02 — Description (PH 본문)</div>
+    <div style="position:relative;">
+      <pre id="desc">ZeroPack is a landing page builder with a radical idea: you own everything.
+
+One payment. No monthly fees. Your code lives in your GitHub. Your site runs on your Vercel. Even if ZeroPack disappears tomorrow, your website keeps running — forever.
+
+<b>How it works:</b>
+1. Purchase a license
+2. Go to zpack.app and enter your license key
+3. Connect GitHub + Vercel (guided setup)
+4. Your site deploys automatically in ~3 minutes
+5. Edit text, images, and colors with our Visual Editor — no code needed
+
+<b>Why we built this:</b>
+Landing page tools charge $30-50/month. That's $600/year for a simple website you don't even own. We think that's broken. ZeroPack flips the model: pay once, own it forever, host it free.
+
+<b>Key features:</b>
+✓ 3-minute auto-deploy via GitHub + Vercel
+✓ Visual Editor — click to edit anything
+✓ 100% code ownership (your GitHub repo)
+✓ Zero hosting costs (Vercel free tier)
+✓ 15 languages supported
+✓ Mobile-optimized out of the box
+✓ 10 professional templates included</pre>
+      <button class="copy-btn" onclick="copyText('desc')">COPY</button>
+    </div>
+  </div>
+
+  <!-- 3. Maker Comment -->
+  <div class="section">
+    <div class="section-title">03 — 첫 댓글 (Maker Comment) — 런칭 당일 직접 작성</div>
+    <div style="position:relative;">
+      <pre id="comment">Hi Product Hunt! 👋
+
+I'm Daehyun, a solo developer from South Korea.
+
+I built ZeroPack because I was frustrated paying $40/month for a landing page tool that "owned" my website. When I stopped paying, my site was gone. That felt wrong.
+
+So I built the opposite:
+- You pay once → you get a license key
+- Enter it on zpack.app → it forks the template to YOUR GitHub, creates a Vercel project under YOUR account
+- 3 minutes later, your site is live at yourdomain.zpack.app
+- Edit everything visually. No code needed.
+- Stop paying? Your site keeps running. Forever.
+
+The hardest part was building the zero-config setup pipeline — automatically wiring GitHub, Vercel, environment variables, and subdomain in one click without any user touching a terminal.
+
+Would love your feedback! Happy to answer any questions 🙏</pre>
+      <button class="copy-btn" onclick="copyText('comment')">COPY</button>
+    </div>
+  </div>
+
+  <!-- 4. Screenshots -->
+  <div class="section">
+    <div class="section-title">04 — 스크린샷 가이드 (5장 권장)</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">권장 사이즈: <strong style="color:var(--text);">1270×952px</strong> 또는 <strong style="color:var(--text);">1600×900px</strong></p>
+    <div class="screenshot-grid">
+      <div class="screenshot-card">
+        <div class="screenshot-header">
+          <div class="screenshot-num">1</div>
+          <div class="screenshot-title">메인 홈페이지</div>
+        </div>
+        <div class="screenshot-body">
+          <a class="screenshot-url" href="https://zpack.app/en" target="_blank">https://zpack.app/en</a>
+          <p class="screenshot-note">히어로 섹션 + 가격 정책 보이도록</p>
+        </div>
+      </div>
+      <div class="screenshot-card">
+        <div class="screenshot-header">
+          <div class="screenshot-num">2</div>
+          <div class="screenshot-title">템플릿 선택 화면</div>
+        </div>
+        <div class="screenshot-body">
+          <a class="screenshot-url" href="https://zpack.app/en/templates" target="_blank">https://zpack.app/en/templates</a>
+          <p class="screenshot-note">10가지 템플릿 갤러리</p>
+        </div>
+      </div>
+      <div class="screenshot-card">
+        <div class="screenshot-header">
+          <div class="screenshot-num">3</div>
+          <div class="screenshot-title">배포 진행 중 화면</div>
+        </div>
+        <div class="screenshot-body">
+          <span class="screenshot-url" style="cursor:default;">배포 중 화면 직접 캡처</span>
+          <p class="screenshot-note">프로그레스바 + 단계 표시 화면</p>
+        </div>
+      </div>
+      <div class="screenshot-card">
+        <div class="screenshot-header">
+          <div class="screenshot-num">4</div>
+          <div class="screenshot-title">Visual Editor</div>
+        </div>
+        <div class="screenshot-body">
+          <span class="screenshot-url" style="cursor:default;">배포된 사이트 /admin</span>
+          <p class="screenshot-note">텍스트·이미지 인라인 편집 화면</p>
+        </div>
+      </div>
+      <div class="screenshot-card">
+        <div class="screenshot-header">
+          <div class="screenshot-num">5</div>
+          <div class="screenshot-title">완성된 템플릿 예시</div>
+        </div>
+        <div class="screenshot-body">
+          <a class="screenshot-url" href="https://temp01-07.zpack.app" target="_blank">https://temp01-07.zpack.app</a>
+          <p class="screenshot-note">병원 템플릿 — 완성도 높은 예시</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. 런칭 전략 -->
+  <div class="section">
+    <div class="section-title">05 — 런칭 전략</div>
+
+    <div class="timing-box" style="margin-bottom:20px;">
+      <div class="timing-label">최적 런칭 시간</div>
+      <div class="timing-time">화요일 12:01 AM PST</div>
+      <div class="timing-sub">한국시간 기준 화요일 오후 5시 01분</div>
+    </div>
+
+    <div class="strategy-grid">
+      <div class="strategy-card">
+        <div class="strategy-icon">📅</div>
+        <div class="strategy-title">D-14 · Upcoming 등록</div>
+        <div class="strategy-text">런칭 1~2주 전 Upcoming 페이지 등록 → 알림 구독자 미리 모으기<br><br><a href="https://www.producthunt.com/upcoming/new" style="color:var(--blue);font-size:12px;">producthunt.com/upcoming/new</a></div>
+      </div>
+      <div class="strategy-card">
+        <div class="strategy-icon">⏰</div>
+        <div class="strategy-title">D-Day · 첫 1~2시간</div>
+        <div class="strategy-text">지인·SNS에 Upvote 요청<br>첫 1~2시간이 당일 랭킹을 결정<br>Maker Comment 즉시 작성</div>
+      </div>
+      <div class="strategy-card">
+        <div class="strategy-icon">💬</div>
+        <div class="strategy-title">당일 댓글 대응</div>
+        <div class="strategy-text">질문에 빠르게 답변해야 상위 유지<br>영어로 친절하고 간결하게 응답</div>
+      </div>
+      <div class="strategy-card">
+        <div class="strategy-icon">🔗</div>
+        <div class="strategy-title">크로스 홍보</div>
+        <div class="strategy-text">Reddit (r/SideProject, r/nocode)<br>Indie Hackers, Twitter/X, LinkedIn<br>한국: 디스콰이엇, 커리어리</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. 런칭 전 체크리스트 -->
+  <div class="section">
+    <div class="section-title">06 — 런칭 전 체크리스트</div>
+    <div class="card">
+      <ul class="checklist">
+        <li>Product Hunt 계정 생성 / 프로필 사진·소개 완성</li>
+        <li>Upcoming 페이지 등록 (D-14 이전)</li>
+        <li>스크린샷 5장 준비 (1270×952px)</li>
+        <li>데모 GIF 또는 짧은 영상 준비 (선택, 강력 추천)</li>
+        <li>Tagline 최종 확인 (60자 이내)</li>
+        <li>Description 영문 교정</li>
+        <li>Maker Comment 미리 작성해두기</li>
+        <li>zpack.app 전체 기능 최종 점검</li>
+        <li>지인 Upvote 리스트 확보 (최소 20명)</li>
+        <li>런칭 당일 SNS 포스팅 문구 준비</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <footer>ZeroPack Marketing · 작성일 2026-04-01 · <a href="https://zpack.app" style="color:var(--muted);">zpack.app</a></footer>
+
+</div>
+
+<script>
+function copyText(id) {
+  const el = document.getElementById(id);
+  const text = el.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = el.parentElement.querySelector('.copy-btn');
+    const orig = btn.textContent;
+    btn.textContent = 'COPIED!';
+    btn.style.background = 'var(--green)';
+    btn.style.color = '#fff';
+    setTimeout(() => { btn.textContent = orig; btn.style.background = ''; btn.style.color = ''; }, 2000);
+  });
+}
+</script>
+</body>
+</html>
