@@ -16,8 +16,10 @@
     --ai: #7c3aed;
     --mkt: #0ea5e9;
     --qa: #22c55e;
+    --mgr: #f59e0b;
     --mkt-soft: #0c1e2a;
     --qa-soft: #0a1f0f;
+    --mgr-soft: #1a1200;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 40px 20px; }
@@ -55,6 +57,7 @@
 
   /* teams row */
   .teams-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .teams-row-single { display: grid; grid-template-columns: 1fr; gap: 24px; max-width: 480px; margin: 24px auto 0; }
   @media (max-width: 640px) { .teams-row { grid-template-columns: 1fr; } }
 
   .team-section { border-radius: 14px; overflow: hidden; }
@@ -65,13 +68,16 @@
   }
   .team-header-mkt { background: var(--mkt-soft); border: 1px solid #0c2d3f; border-bottom: none; border-radius: 14px 14px 0 0; }
   .team-header-qa  { background: var(--qa-soft);  border: 1px solid #0c2d15; border-bottom: none; border-radius: 14px 14px 0 0; }
+  .team-header-mgr { background: var(--mgr-soft); border: 1px solid #4a3000; border-bottom: none; border-radius: 14px 14px 0 0; }
 
   .team-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
   .team-icon-mkt { background: #0c2a3a; }
   .team-icon-qa  { background: #0a2010; }
+  .team-icon-mgr { background: #2a1a00; }
   .team-name { font-size: 14px; font-weight: 800; }
   .team-name-mkt { color: var(--mkt); }
   .team-name-qa  { color: var(--qa); }
+  .team-name-mgr { color: var(--mgr); }
   .team-count { font-size: 11px; color: var(--muted); margin-top: 1px; }
 
   .members-list { border: 1px solid var(--border); border-top: none; border-radius: 0 0 14px 14px; overflow: hidden; }
@@ -88,6 +94,7 @@
   }
   .code-mkt { background: #0c2a3a; color: #38bdf8; border: 1px solid #0c3a52; }
   .code-qa  { background: #0a2010; color: #4ade80; border: 1px solid #0f3018; }
+  .code-mgr { background: #2a1a00; color: #fbbf24; border: 1px solid #4a3000; }
   .member-name { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
   .member-desc { font-size: 11px; color: var(--muted); line-height: 1.4; }
 
@@ -107,7 +114,7 @@
   <div class="header">
     <div class="badge">🏢 Organization Chart</div>
     <h1>WebCorgi 팀 조직도</h1>
-    <p class="header-sub">ZeroPack 프로젝트 · 2026-04-02 기준</p>
+    <p class="header-sub">ZeroPack 프로젝트 · 2026-04-02 기준 (경영관리팀 추가)</p>
   </div>
 
   <!-- CEO -->
@@ -247,6 +254,28 @@
 
   </div>
 
+  <!-- 경영관리팀 -->
+  <div class="teams-row-single">
+    <div class="team-section">
+      <div class="team-header team-header-mgr">
+        <div class="team-icon team-icon-mgr">🗂️</div>
+        <div>
+          <div class="team-name team-name-mgr">경영관리팀</div>
+          <div class="team-count">1명 · Management Team</div>
+        </div>
+      </div>
+      <div class="members-list">
+        <div class="member">
+          <span class="member-code code-mgr">MGR</span>
+          <div>
+            <div class="member-name">경영관리팀장</div>
+            <div class="member-desc">채용·조직도·보고서·AGENTS.md 유지</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- 운영 정책 -->
   <div class="summary" style="margin-top:24px; background:#0c0c10; border-color:#1e1e28;">
     <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#7c3aed;margin-bottom:12px;">⚙️ 에이전트 운영 정책</div>
@@ -268,11 +297,11 @@
   <div class="summary">
     <div class="summary-row">
       <span class="summary-key">총 인원</span>
-      <span class="summary-val">CEO 1명 + AI 에이전트 13명</span>
+      <span class="summary-val">CEO 1명 + AI 에이전트 14명</span>
     </div>
     <div class="summary-row">
       <span class="summary-key">팀 구성</span>
-      <span class="summary-val">마케팅팀 7명 · QA팀 6명</span>
+      <span class="summary-val">마케팅팀 7명 · QA팀 6명 · 경영관리팀 1명</span>
     </div>
     <div class="summary-row">
       <span class="summary-key">호출 방법</span>
