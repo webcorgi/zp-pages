@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZeroPack 마케팅 보고서</title>
+<style>
+  :root {
+    --bg: #0a0a0d;
+    --surface: #141418;
+    --surface2: #1c1c22;
+    --border: #26262e;
+    --accent: #7c3aed;
+    --accent2: #a855f7;
+    --green: #22c55e;
+    --amber: #f59e0b;
+    --blue: #3b82f6;
+    --red: #ef4444;
+    --text: #e8e8f0;
+    --muted: #666677;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 40px 20px; }
+  .container { max-width: 900px; margin: 0 auto; }
+
+  .header { margin-bottom: 48px; }
+  .badge { display: inline-flex; align-items: center; gap: 6px; background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; margin-bottom: 14px; }
+  h1 { font-size: 32px; font-weight: 800; margin-bottom: 6px; }
+  .header-meta { font-size: 13px; color: var(--muted); }
+
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 48px; }
+  @media (max-width: 600px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; }
+  .stat-num { font-size: 28px; font-weight: 800; color: var(--accent2); }
+  .stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 1px; }
+
+  .section-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent2); border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 20px; margin-top: 40px; }
+
+  .deliverable { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 12px; display: flex; gap: 20px; align-items: flex-start; transition: border-color 0.2s; }
+  .deliverable:hover { border-color: var(--accent); }
+  .deliverable-num { font-size: 11px; font-weight: 700; color: var(--muted); min-width: 28px; padding-top: 2px; }
+  .deliverable-body { flex: 1; }
+  .deliverable-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+  .deliverable-title { font-size: 15px; font-weight: 700; }
+  .tag { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 2px 8px; border-radius: 10px; }
+  .tag-copy { background: #1a1535; color: #a78bfa; border: 1px solid #3b2d6a; }
+  .tag-strategy { background: #0f1f14; color: #4ade80; border: 1px solid #16532d; }
+  .tag-launch { background: #1a0f0f; color: #f87171; border: 1px solid #6b1e1e; }
+  .tag-channel { background: #0f1520; color: #60a5fa; border: 1px solid #1e3a5f; }
+  .tag-done { background: #0f1a10; color: #22c55e; border: 1px solid #166534; }
+  .tag-wip { background: #1a1500; color: #fbbf24; border: 1px solid #6b4c00; }
+  .deliverable-desc { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+  .deliverable-links { display: flex; gap: 8px; flex-wrap: wrap; }
+  .link-btn { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 6px; text-decoration: none; transition: opacity 0.2s; }
+  .link-btn:hover { opacity: 0.8; }
+  .link-preview { background: var(--accent); color: #fff; }
+  .link-source { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .link-disabled { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); cursor: not-allowed; opacity: 0.5; }
+  .deliverable-date { font-size: 11px; color: var(--muted); margin-top: 8px; }
+
+  .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+  .team-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+  .team-role { font-size: 12px; font-weight: 700; color: var(--accent2); margin-bottom: 4px; }
+  .team-desc { font-size: 12px; color: var(--muted); }
+
+  .timeline { border-left: 2px solid var(--border); padding-left: 20px; }
+  .timeline-item { position: relative; margin-bottom: 16px; }
+  .timeline-item::before { content: ''; position: absolute; left: -26px; top: 6px; width: 8px; height: 8px; background: var(--accent2); border-radius: 50%; }
+  .timeline-date { font-size: 11px; color: var(--muted); }
+  .timeline-text { font-size: 13px; color: var(--text); }
+
+  footer { margin-top: 60px; text-align: center; font-size: 12px; color: var(--muted); }
+  .divider { height: 1px; background: var(--border); margin: 40px 0; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="badge">📊 Marketing Report</div>
+    <h1>ZeroPack 마케팅 보고서</h1>
+    <p class="header-meta">마케팅 에이전트팀 완성품 현황 · 최종 업데이트: 2026-04-02</p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num">4</div>
+      <div class="stat-label">완성 산출물</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">2</div>
+      <div class="stat-label">라이브 페이지</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">7</div>
+      <div class="stat-label">에이전트 팀원</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">3</div>
+      <div class="stat-label">채널 타겟</div>
+    </div>
+  </div>
+
+  <!-- 완성 산출물 -->
+  <div class="section-title">완성 산출물 (4개)</div>
+
+  <div class="deliverable">
+    <div class="deliverable-num">01</div>
+    <div class="deliverable-body">
+      <div class="deliverable-top">
+        <span class="deliverable-title">크몽 랜딩페이지</span>
+        <span class="tag tag-copy">카피라이터</span>
+        <span class="tag tag-done">완료</span>
+      </div>
+      <p class="deliverable-desc">크몽 서비스 등록용 랜딩페이지 HTML. 히어로(가격·할인율), 경쟁 비교표, 기능 그리드, 4단계 프로세스 구성. 다크 테마.</p>
+      <div class="deliverable-links">
+        <a class="link-btn link-preview" href="https://webcorgi.github.io/zp-pages/kmong-landing.html" target="_blank">🔗 라이브 미리보기</a>
+        <a class="link-btn link-source" href="https://github.com/webcorgi/zp-pages/blob/main/kmong-landing.html" target="_blank">📁 소스</a>
+      </div>
+      <div class="deliverable-date">작성일: 2026-04-01 · 담당: 카피라이터 에이전트</div>
+    </div>
+  </div>
+
+  <div class="deliverable">
+    <div class="deliverable-num">02</div>
+    <div class="deliverable-body">
+      <div class="deliverable-top">
+        <span class="deliverable-title">크몽 서비스 소개글</span>
+        <span class="tag tag-copy">카피라이터</span>
+        <span class="tag tag-done">완료</span>
+      </div>
+      <p class="deliverable-desc">크몽 서비스 등록 시 사용할 홍보 텍스트. 제목 후보 3가지, 훅 문구, 기능 목록, FAQ, 유의사항 포함. 가격: 20만원.</p>
+      <div class="deliverable-links">
+        <span class="link-btn link-disabled">📄 MD 파일 (내부)</span>
+      </div>
+      <div class="deliverable-date">작성일: 2026-04-01 · 담당: 카피라이터 에이전트</div>
+    </div>
+  </div>
+
+  <div class="deliverable">
+    <div class="deliverable-num">03</div>
+    <div class="deliverable-body">
+      <div class="deliverable-top">
+        <span class="deliverable-title">Product Hunt 런칭 킷</span>
+        <span class="tag tag-launch">런칭</span>
+        <span class="tag tag-done">완료</span>
+      </div>
+      <p class="deliverable-desc">PH 제출 전체 자료. 태그라인, Description, Maker Comment, 스크린샷 5장 가이드, 런칭 전략(화요일 12:01 AM PST), 체크리스트 10개. Copy 버튼 포함.</p>
+      <div class="deliverable-links">
+        <a class="link-btn link-preview" href="https://webcorgi.github.io/zp-pages/ph-launch.html" target="_blank">🔗 라이브 미리보기</a>
+        <a class="link-btn link-source" href="https://github.com/webcorgi/zp-pages/blob/main/ph-launch.html" target="_blank">📁 소스</a>
+      </div>
+      <div class="deliverable-date">작성일: 2026-04-01 · 담당: CMO + 카피라이터 에이전트</div>
+    </div>
+  </div>
+
+  <div class="deliverable">
+    <div class="deliverable-num">04</div>
+    <div class="deliverable-body">
+      <div class="deliverable-top">
+        <span class="deliverable-title">글로벌 마케팅 전략서</span>
+        <span class="tag tag-strategy">전략</span>
+        <span class="tag tag-done">완료</span>
+      </div>
+      <p class="deliverable-desc">채널별 홍보 전략 전체. Product Hunt, 크몽, Reddit, Indie Hackers, 디스콰이엇, SEO, 소셜 등 자동화 중심 글로벌 전략 포함.</p>
+      <div class="deliverable-links">
+        <span class="link-btn link-disabled">📄 MD 파일 (내부)</span>
+      </div>
+      <div class="deliverable-date">작성일: 2026-04-01 · 담당: CMO 에이전트</div>
+    </div>
+  </div>
+
+  <!-- 에이전트 팀 -->
+  <div class="section-title">마케팅 에이전트 팀 (7명)</div>
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="team-role">👔 CMO</div>
+      <div class="team-desc">전체 전략 수립 · 채널 우선순위</div>
+    </div>
+    <div class="team-card">
+      <div class="team-role">✍️ 카피라이터</div>
+      <div class="team-desc">랜딩페이지 · 소개글 · 태그라인</div>
+    </div>
+    <div class="team-card">
+      <div class="team-role">🔍 SEO</div>
+      <div class="team-desc">키워드 · 메타태그 · 검색 최적화</div>
+    </div>
+    <div class="team-card">
+      <div class="team-role">📱 소셜</div>
+      <div class="team-desc">SNS 콘텐츠 · 커뮤니티 관리</div>
+    </div>
+    <div class="team-card">
+      <div class="team-role">📝 콘텐츠</div>
+      <div class="team-desc">블로그 · 튜토리얼 · 가이드</div>
+    </div>
+    <div class="team-card">
+      <div class="team-role">📈 그로스</div>
+      <div class="team-desc">퍼널 · 전환율 · 자동화</div>
+    </div>
+    <div class="team-card">
+      <div class="team-role">🇰🇷 한국</div>
+      <div class="team-desc">국내 채널 · 크몽 · 커뮤니티</div>
+    </div>
+  </div>
+
+  <!-- 다음 예정 -->
+  <div class="section-title">다음 예정 산출물</div>
+  <div class="deliverable" style="opacity:0.6;">
+    <div class="deliverable-num">05</div>
+    <div class="deliverable-body">
+      <div class="deliverable-top">
+        <span class="deliverable-title">Reddit 론치 포스트</span>
+        <span class="tag tag-channel">소셜</span>
+        <span class="tag tag-wip">예정</span>
+      </div>
+      <p class="deliverable-desc">r/SideProject, r/nocode, r/webdev 타겟 포스팅. PH 런칭과 동시 발행 예정.</p>
+      <div class="deliverable-links"><span class="link-btn link-disabled">미완성</span></div>
+    </div>
+  </div>
+  <div class="deliverable" style="opacity:0.6;">
+    <div class="deliverable-num">06</div>
+    <div class="deliverable-body">
+      <div class="deliverable-top">
+        <span class="deliverable-title">Indie Hackers 소개글</span>
+        <span class="tag tag-channel">콘텐츠</span>
+        <span class="tag tag-wip">예정</span>
+      </div>
+      <p class="deliverable-desc">1인 개발자 스토리 + 제품 소개. "How I built ZeroPack" 형식.</p>
+      <div class="deliverable-links"><span class="link-btn link-disabled">미완성</span></div>
+    </div>
+  </div>
+  <div class="deliverable" style="opacity:0.6;">
+    <div class="deliverable-num">07</div>
+    <div class="deliverable-body">
+      <div class="deliverable-top">
+        <span class="deliverable-title">디스콰이엇 등록 자료</span>
+        <span class="tag tag-channel">한국</span>
+        <span class="tag tag-wip">예정</span>
+      </div>
+      <p class="deliverable-desc">한국 인디해커 커뮤니티 디스콰이엇 제품 등록 + 메이커 스토리.</p>
+      <div class="deliverable-links"><span class="link-btn link-disabled">미완성</span></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <footer>ZeroPack Marketing Report · 최종 업데이트 2026-04-02 · <a href="https://zpack.app" style="color:var(--muted);">zpack.app</a></footer>
+</div>
+</body>
+</html>
