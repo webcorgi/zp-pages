@@ -1,11 +1,55 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head><meta charset="UTF-8"><title>ZeroPack Pages</title>
-<style>body{font-family:sans-serif;background:#0A0A0F;color:#fff;padding:40px;} a{color:#A78BFF;display:block;margin:8px 0;font-size:18px}</style>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>ZeroPack Pages</title>
+<style>
+  body { font-family: -apple-system, sans-serif; background: #0A0A0F; color: #fff; padding: 40px 20px; }
+  .container { max-width: 700px; margin: 0 auto; }
+  h2 { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+  p { color: #666677; font-size: 13px; margin-bottom: 32px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+  a.card { display: block; padding: 16px 20px; background: #141418; border: 1px solid #26262e; border-radius: 12px; text-decoration: none; transition: border-color 0.2s; }
+  a.card:hover { border-color: #7c3aed; }
+  .card-icon { font-size: 20px; margin-bottom: 8px; }
+  .card-title { font-size: 14px; font-weight: 700; color: #e8e8f0; margin-bottom: 4px; }
+  .card-desc { font-size: 12px; color: #666677; }
+</style>
 </head>
 <body>
-<h2>ZeroPack Pages</h2>
-<a href="kmong-landing.html">📄 크몽 랜딩페이지</a>
-<a href="qa-report.html">🔍 QA 최종 보고서</a>
+<div class="container">
+  <h2>ZeroPack Pages</h2>
+  <p>WebCorgi 에이전트팀 산출물 모음 · GitHub Pages 배포</p>
+  <div class="grid">
+    <a class="card" href="marketing-report.html">
+      <div class="card-icon">📊</div>
+      <div class="card-title">마케팅 전략 보고서</div>
+      <div class="card-desc">7명 각자 전략 + 자동화 우선순위 분석</div>
+    </a>
+    <a class="card" href="ph-launch.html">
+      <div class="card-icon">🚀</div>
+      <div class="card-title">Product Hunt 런칭 킷</div>
+      <div class="card-desc">태그라인·Description·Maker Comment·체크리스트</div>
+    </a>
+    <a class="card" href="kmong-landing.html">
+      <div class="card-icon">🇰🇷</div>
+      <div class="card-title">크몽 랜딩페이지</div>
+      <div class="card-desc">크몽 서비스 등록용 홍보 페이지</div>
+    </a>
+    <a class="card" href="qa-report.html">
+      <div class="card-icon">🔍</div>
+      <div class="card-title">QA 최종 보고서</div>
+      <div class="card-desc">P0~P2 버그 점검 및 수정 현황</div>
+    </a>
+    <a class="card" href="setup-guide.html">
+      <div class="card-icon">📖</div>
+      <div class="card-title">초기 설정 가이드</div>
+      <div class="card-desc">GitHub·Vercel 초보자 완전 정복 4단계</div>
+    </a>
+    <a class="card" href="org-chart.html">
+      <div class="card-icon">🏢</div>
+      <div class="card-title">조직도</div>
+      <div class="card-desc">WebCorgi 에이전트 전체 조직 구성</div>
+    </a>
+  </div>
+</div>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZeroPack 마케팅 보고서</title>
+<title>ZeroPack 마케팅 전략 보고서</title>
 <style>
   :root {
     --bg: #0a0a0d;
@@ -21,7 +21,7 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 40px 20px; }
-  .container { max-width: 900px; margin: 0 auto; }
+  .container { max-width: 960px; margin: 0 auto; }
 
   .header { margin-bottom: 48px; }
   .badge { display: inline-flex; align-items: center; gap: 6px; background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; margin-bottom: 14px; }
@@ -34,43 +34,79 @@
   .stat-num { font-size: 28px; font-weight: 800; color: var(--accent2); }
   .stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 1px; }
 
-  .section-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent2); border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 20px; margin-top: 40px; }
+  .section-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent2); border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 20px; margin-top: 48px; }
 
-  .deliverable { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 12px; display: flex; gap: 20px; align-items: flex-start; transition: border-color 0.2s; }
-  .deliverable:hover { border-color: var(--accent); }
-  .deliverable-num { font-size: 11px; font-weight: 700; color: var(--muted); min-width: 28px; padding-top: 2px; }
-  .deliverable-body { flex: 1; }
-  .deliverable-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
-  .deliverable-title { font-size: 15px; font-weight: 700; }
-  .tag { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 2px 8px; border-radius: 10px; }
-  .tag-copy { background: #1a1535; color: #a78bfa; border: 1px solid #3b2d6a; }
-  .tag-strategy { background: #0f1f14; color: #4ade80; border: 1px solid #16532d; }
-  .tag-launch { background: #1a0f0f; color: #f87171; border: 1px solid #6b1e1e; }
-  .tag-channel { background: #0f1520; color: #60a5fa; border: 1px solid #1e3a5f; }
-  .tag-done { background: #0f1a10; color: #22c55e; border: 1px solid #166534; }
-  .tag-wip { background: #1a1500; color: #fbbf24; border: 1px solid #6b4c00; }
-  .deliverable-desc { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
-  .deliverable-links { display: flex; gap: 8px; flex-wrap: wrap; }
-  .link-btn { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 6px; text-decoration: none; transition: opacity 0.2s; }
-  .link-btn:hover { opacity: 0.8; }
-  .link-preview { background: var(--accent); color: #fff; }
-  .link-source { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
-  .link-disabled { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); cursor: not-allowed; opacity: 0.5; }
-  .deliverable-date { font-size: 11px; color: var(--muted); margin-top: 8px; }
+  /* Nav tabs */
+  .tab-nav { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 28px; margin-top: 32px; }
+  .tab-btn { padding: 7px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--muted); transition: all 0.2s; }
+  .tab-btn:hover { border-color: var(--accent); color: var(--text); }
+  .tab-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
 
+  /* Strategy cards */
+  .strategy-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px 28px; margin-bottom: 16px; }
+  .strategy-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .strategy-card ul { list-style: none; padding: 0; }
+  .strategy-card ul li { font-size: 13px; color: var(--muted); padding: 5px 0; border-bottom: 1px solid var(--border); display: flex; gap: 8px; }
+  .strategy-card ul li:last-child { border-bottom: none; }
+  .strategy-card ul li::before { content: '→'; color: var(--accent2); flex-shrink: 0; }
+  .strategy-card p { font-size: 13px; color: var(--muted); margin-top: 10px; }
+
+  /* KPI table */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
+  th { text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); padding: 8px 12px; background: var(--surface2); border-bottom: 1px solid var(--border); }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(124,58,237,0.05); }
+  .td-green { color: var(--green); font-weight: 700; }
+  .td-amber { color: var(--amber); font-weight: 700; }
+  .td-blue { color: var(--blue); font-weight: 700; }
+  .td-red { color: var(--red); }
+
+  /* Automation grades */
+  .auto-section { margin-bottom: 32px; }
+  .auto-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .grade-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; padding: 6px 14px; border-radius: 20px; }
+  .grade-a { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  .grade-b { background: rgba(245,158,11,0.15); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+  .grade-c { background: rgba(102,102,119,0.15); color: var(--muted); border: 1px solid var(--border); }
+  .auto-item { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; margin-bottom: 8px; display: flex; gap: 16px; align-items: flex-start; }
+  .auto-num { font-size: 11px; font-weight: 700; color: var(--muted); min-width: 26px; padding-top: 2px; }
+  .auto-body { flex: 1; }
+  .auto-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .auto-tool { font-size: 11px; color: var(--accent2); font-weight: 600; }
+  .auto-desc { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .difficulty { display: inline-block; font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 8px; margin-left: 6px; }
+  .diff-easy { background: rgba(34,197,94,0.15); color: var(--green); }
+  .diff-mid { background: rgba(245,158,11,0.15); color: var(--amber); }
+  .diff-hard { background: rgba(239,68,68,0.15); color: var(--red); }
+
+  /* Roadmap */
+  .roadmap-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  @media (max-width: 600px) { .roadmap-grid { grid-template-columns: 1fr; } }
+  .roadmap-week { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; }
+  .roadmap-week h4 { font-size: 12px; font-weight: 700; color: var(--accent2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+  .roadmap-week li { font-size: 12px; color: var(--muted); padding: 4px 0; list-style: none; border-bottom: 1px solid var(--border); display: flex; gap: 8px; }
+  .roadmap-week li:last-child { border-bottom: none; }
+  .roadmap-week li::before { content: '✓'; color: var(--green); }
+
+  /* Team grid */
   .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
   .team-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
   .team-role { font-size: 12px; font-weight: 700; color: var(--accent2); margin-bottom: 4px; }
   .team-desc { font-size: 12px; color: var(--muted); }
 
-  .timeline { border-left: 2px solid var(--border); padding-left: 20px; }
-  .timeline-item { position: relative; margin-bottom: 16px; }
-  .timeline-item::before { content: ''; position: absolute; left: -26px; top: 6px; width: 8px; height: 8px; background: var(--accent2); border-radius: 50%; }
-  .timeline-date { font-size: 11px; color: var(--muted); }
-  .timeline-text { font-size: 13px; color: var(--text); }
+  /* Highlight box */
+  .highlight-box { background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.25); border-radius: 12px; padding: 18px 22px; margin-bottom: 16px; }
+  .highlight-box h4 { font-size: 13px; font-weight: 700; color: var(--accent2); margin-bottom: 10px; }
+  .highlight-box li { font-size: 13px; color: var(--text); padding: 4px 0; list-style: none; display: flex; gap: 8px; }
+  .highlight-box li::before { content: '•'; color: var(--accent2); }
 
-  footer { margin-top: 60px; text-align: center; font-size: 12px; color: var(--muted); }
   .divider { height: 1px; background: var(--border); margin: 40px 0; }
+  footer { margin-top: 60px; text-align: center; font-size: 12px; color: var(--muted); }
+  a { color: var(--accent2); text-decoration: none; }
+  a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -78,172 +114,527 @@
 
   <div class="header">
     <div class="badge">📊 Marketing Report</div>
-    <h1>ZeroPack 마케팅 보고서</h1>
-    <p class="header-meta">마케팅 에이전트팀 완성품 현황 · 최종 업데이트: 2026-04-02</p>
+    <h1>ZeroPack 마케팅 전략 보고서</h1>
+    <p class="header-meta">마케팅팀 7명 각자 전략 + 자동화 우선순위 분석 · 최종 업데이트: 2026-04-03</p>
   </div>
 
   <div class="stats-row">
     <div class="stat-card">
-      <div class="stat-num">4</div>
-      <div class="stat-label">완성 산출물</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num">2</div>
-      <div class="stat-label">라이브 페이지</div>
-    </div>
-    <div class="stat-card">
       <div class="stat-num">7</div>
-      <div class="stat-label">에이전트 팀원</div>
+      <div class="stat-label">전략 보고서</div>
     </div>
     <div class="stat-card">
-      <div class="stat-num">3</div>
-      <div class="stat-label">채널 타겟</div>
+      <div class="stat-num">9</div>
+      <div class="stat-label">100% 자동화</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">31h</div>
+      <div class="stat-label">총 투자 시간</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">0원</div>
+      <div class="stat-label">툴 비용</div>
     </div>
   </div>
 
-  <!-- 완성 산출물 -->
-  <div class="section-title">완성 산출물 (4개)</div>
-
-  <div class="deliverable">
-    <div class="deliverable-num">01</div>
-    <div class="deliverable-body">
-      <div class="deliverable-top">
-        <span class="deliverable-title">크몽 랜딩페이지</span>
-        <span class="tag tag-copy">카피라이터</span>
-        <span class="tag tag-done">완료</span>
-      </div>
-      <p class="deliverable-desc">크몽 서비스 등록용 랜딩페이지 HTML. 히어로(가격·할인율), 경쟁 비교표, 기능 그리드, 4단계 프로세스 구성. 다크 테마.</p>
-      <div class="deliverable-links">
-        <a class="link-btn link-preview" href="https://webcorgi.github.io/zp-pages/kmong-landing.html" target="_blank">🔗 라이브 미리보기</a>
-        <a class="link-btn link-source" href="https://github.com/webcorgi/zp-pages/blob/main/kmong-landing.html" target="_blank">📁 소스</a>
-      </div>
-      <div class="deliverable-date">작성일: 2026-04-01 · 담당: 카피라이터 에이전트</div>
-    </div>
+  <!-- Tabs -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="showTab('auto')">🤖 자동화 분석</button>
+    <button class="tab-btn" onclick="showTab('cmo')">👔 CMO</button>
+    <button class="tab-btn" onclick="showTab('copy')">✍️ 카피라이터</button>
+    <button class="tab-btn" onclick="showTab('seo')">🔍 SEO</button>
+    <button class="tab-btn" onclick="showTab('social')">📱 소셜</button>
+    <button class="tab-btn" onclick="showTab('content')">📝 콘텐츠</button>
+    <button class="tab-btn" onclick="showTab('growth')">📈 그로스</button>
+    <button class="tab-btn" onclick="showTab('korea')">🇰🇷 한국</button>
   </div>
 
-  <div class="deliverable">
-    <div class="deliverable-num">02</div>
-    <div class="deliverable-body">
-      <div class="deliverable-top">
-        <span class="deliverable-title">크몽 서비스 소개글</span>
-        <span class="tag tag-copy">카피라이터</span>
-        <span class="tag tag-done">완료</span>
+  <!-- 자동화 분석 탭 -->
+  <div id="tab-auto" class="tab-pane active">
+
+    <div class="highlight-box">
+      <h4>핵심 결론 — 31시간 투자로 월 800~4,500 UV 자동 파이프라인 구축</h4>
+      <ul>
+        <li>A등급 9개 (7시간) → 세팅 후 사람 개입 0%, 영구 자동 가동</li>
+        <li>B등급 9개 (15시간) → 초기 1회 설정 후 자동 운영</li>
+        <li>C등급 (Reddit, YouTube 등) → 후순위. A+B 안정화 후 진행</li>
+        <li>무료 툴 스택: Resend + Buffer + Lemon Squeezy + GA4 + Crisp</li>
+      </ul>
+    </div>
+
+    <!-- A등급 -->
+    <div class="auto-section">
+      <div class="auto-header">
+        <span class="grade-badge grade-a">🤖 A등급 — 100% 자동화 (9개)</span>
+        <span style="font-size:12px;color:var(--muted);">세팅 후 사람 개입 0%</span>
       </div>
-      <p class="deliverable-desc">크몽 서비스 등록 시 사용할 홍보 텍스트. 제목 후보 3가지, 훅 문구, 기능 목록, FAQ, 유의사항 포함. 가격: 20만원.</p>
-      <div class="deliverable-links">
-        <span class="link-btn link-disabled">📄 MD 파일 (내부)</span>
+
+      <div class="auto-item">
+        <div class="auto-num">A-1</div>
+        <div class="auto-body">
+          <div class="auto-title">구매 완료 → 웰컴 이메일 자동 발송 <span class="difficulty diff-easy">쉬움</span></div>
+          <div class="auto-tool">Lemon Squeezy 웹훅 + Resend</div>
+          <div class="auto-desc">구매 즉시 트리거 → 온보딩 가이드 자동 발송. 온보딩 완료율 ↑</div>
+        </div>
       </div>
-      <div class="deliverable-date">작성일: 2026-04-01 · 담당: 카피라이터 에이전트</div>
+      <div class="auto-item">
+        <div class="auto-num">A-2</div>
+        <div class="auto-body">
+          <div class="auto-title">Day3 팁 이메일 자동 발송 <span class="difficulty diff-easy">쉬움</span></div>
+          <div class="auto-tool">Resend 자동화 시퀀스</div>
+          <div class="auto-desc">구매 3일 후 핵심 기능 Top3 안내. 이탈 방지 효과</div>
+        </div>
+      </div>
+      <div class="auto-item">
+        <div class="auto-num">A-3</div>
+        <div class="auto-body">
+          <div class="auto-title">Day7 리뷰 요청 이메일 자동 발송 <span class="difficulty diff-easy">쉬움</span></div>
+          <div class="auto-tool">Resend 자동화 시퀀스</div>
+          <div class="auto-desc">크몽/플랫폼 리뷰 자동 요청. 리뷰 전환율 20% 목표</div>
+        </div>
+      </div>
+      <div class="auto-item">
+        <div class="auto-num">A-4</div>
+        <div class="auto-body">
+          <div class="auto-title">구매 24시간 후 리퍼럴 링크 안내 <span class="difficulty diff-easy">쉬움</span></div>
+          <div class="auto-tool">Resend 자동화 시퀀스</div>
+          <div class="auto-desc">추천인 5,000원 + 피추천인 5,000원 할인. 바이럴 루프 자동 가동</div>
+        </div>
+      </div>
+      <div class="auto-item">
+        <div class="auto-num">A-5</div>
+        <div class="auto-body">
+          <div class="auto-title">"Powered by ZeroPack" 역링크 자동 삽입 <span class="difficulty diff-easy">쉬움</span></div>
+          <div class="auto-tool">템플릿 코드 하드코딩</div>
+          <div class="auto-desc">배포된 모든 사이트에 자동 역링크 → 6개월 후 300개+ 백링크, SEO 도메인 권위 ↑</div>
+        </div>
+      </div>
+      <div class="auto-item">
+        <div class="auto-num">A-6</div>
+        <div class="auto-body">
+          <div class="auto-title">GA4 방문자·전환 데이터 수집 <span class="difficulty diff-easy">쉬움</span></div>
+          <div class="auto-tool">Google Analytics 4 (무료)</div>
+          <div class="auto-desc">방문자, 이탈률, 전환 경로 자동 측정</div>
+        </div>
+      </div>
+      <div class="auto-item">
+        <div class="auto-num">A-7</div>
+        <div class="auto-body">
+          <div class="auto-title">Search Console SEO 색인 자동화 <span class="difficulty diff-easy">쉬움</span></div>
+          <div class="auto-tool">Google Search Console (무료)</div>
+          <div class="auto-desc">sitemap.xml 자동 제출 → 키워드 순위 모니터링</div>
+        </div>
+      </div>
+      <div class="auto-item">
+        <div class="auto-num">A-8</div>
+        <div class="auto-body">
+          <div class="auto-title">Twitter/X 예약 포스팅 <span class="difficulty diff-easy">쉬움</span></div>
+          <div class="auto-tool">Buffer 무료플랜 (3채널)</div>
+          <div class="auto-desc">작성된 트윗 2~4주치 예약 → 매일 자동 발행</div>
+        </div>
+      </div>
+      <div class="auto-item">
+        <div class="auto-num">A-9</div>
+        <div class="auto-body">
+          <div class="auto-title">CS 자동 FAQ 응답 <span class="difficulty diff-easy">쉬움</span></div>
+          <div class="auto-tool">Crisp 무료플랜</div>
+          <div class="auto-desc">자주 묻는 질문 자동 챗봇 응답. CS 시간 절감</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B등급 -->
+    <div class="auto-section">
+      <div class="auto-header">
+        <span class="grade-badge grade-b">🔄 B등급 — 70%+ 자동화 (9개)</span>
+        <span style="font-size:12px;color:var(--muted);">초기 1회 설정 후 자동</span>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>항목</th>
+            <th>사람 개입 (1회)</th>
+            <th>이후 자동화</th>
+            <th>투자 시간</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="td-amber">B-1</td><td>Twitter 트윗 시리즈 예약</td><td>문구 초안 작성</td><td>Buffer 자동 발행</td><td>2시간</td></tr>
+          <tr><td class="td-amber">B-2</td><td>#buildinpublic 주간 업데이트</td><td>수치 입력 (10분/주)</td><td>포맷 자동 포스팅</td><td>30분/주</td></tr>
+          <tr><td class="td-amber">B-3</td><td>SaaS 디렉토리 ★ 8곳 등록</td><td>각 사이트 가입·등록</td><td>영구 유입 자동</td><td>3시간</td></tr>
+          <tr><td class="td-amber">B-4</td><td>SaaS 디렉토리 ★★ 5곳 등록</td><td>가입·설명 작성</td><td>영구 유입 자동</td><td>5시간</td></tr>
+          <tr><td class="td-amber">B-5</td><td>이메일 온보딩 시퀀스</td><td>3단계 초안 작성</td><td>구매 트리거 자동 발송</td><td>2시간</td></tr>
+          <tr><td class="td-amber">B-6</td><td>리퍼럴 프로그램 시스템</td><td>링크 생성 로직 개발</td><td>추천·할인 자동 처리</td><td>개발팀 위임</td></tr>
+          <tr><td class="td-amber">B-7</td><td>크몽 리뷰 요청 메시지 자동화</td><td>메시지 템플릿 작성</td><td>구매 후 자동 발송</td><td>30분</td></tr>
+          <tr><td class="td-amber">B-8</td><td>Product Hunt Upcoming 이메일 수집</td><td>Upcoming 페이지 등록</td><td>이메일 자동 수집</td><td>1시간</td></tr>
+          <tr><td class="td-amber">B-9</td><td>Indie Hackers 제품 등록</td><td>최초 1회 등록</td><td>자동 유입 지속</td><td>1시간</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- C등급 -->
+    <div class="auto-section">
+      <div class="auto-header">
+        <span class="grade-badge grade-c">👤 C등급 — 사람 필수 (후순위)</span>
+        <span style="font-size:12px;color:var(--muted);">A+B 안정화 후 진행</span>
+      </div>
+      <table>
+        <thead>
+          <tr><th>항목</th><th>자동화 불가 이유</th><th>우선순위</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>크몽 지인 리뷰 3개 확보</td><td>지인 직접 연락 필수</td><td class="td-green">한국 수익 기반 — 먼저 실행</td></tr>
+          <tr><td>HN Show HN (4월 11일)</td><td>실시간 댓글 대응 필수</td><td class="td-green">1회 4시간, 고효율</td></tr>
+          <tr><td>GitHub Awesome Lists PR</td><td>코드 기여·관리자 소통</td><td class="td-amber">1회 2시간, 영구 링크</td></tr>
+          <tr><td>Reddit 포스팅</td><td>스팸 감지 회피, 커뮤니티 반응 대응</td><td class="td-muted" style="color:var(--muted)">B등급 후 진행</td></tr>
+          <tr><td>YouTube 영상 제작</td><td>촬영·편집 필수</td><td class="td-muted" style="color:var(--muted)">장기 과제</td></tr>
+          <tr><td>네이버 블로그 작성</td><td>SEO 글쓰기 창작</td><td class="td-muted" style="color:var(--muted)">장기 과제</td></tr>
+          <tr><td>PH 런칭 당일 댓글 대응</td><td>실시간 영문 응답 필요</td><td class="td-amber">런칭 당일 집중</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 실행 로드맵 -->
+    <div class="section-title">즉시 실행 로드맵 (A→B 순서)</div>
+    <div class="roadmap-grid">
+      <div class="roadmap-week">
+        <h4>Week 1 — A등급 전부 세팅 (7시간)</h4>
+        <ul>
+          <li>Resend + Lemon Squeezy 웹훅 연동 (2h)</li>
+          <li>GA4 + Search Console 세팅 (1h)</li>
+          <li>"Powered by ZeroPack" 코드 삽입 (30m)</li>
+          <li>Buffer 세팅 + 트윗 2주치 예약 (2h)</li>
+          <li>Crisp FAQ 챗봇 세팅 (1h)</li>
+          <li>크몽 리뷰 요청 메시지 자동화 (30m)</li>
+        </ul>
+      </div>
+      <div class="roadmap-week">
+        <h4>Week 2 — 디렉토리·플랫폼 등록 (12시간)</h4>
+        <ul>
+          <li>SaaS 디렉토리 ★ 8곳 일괄 등록 (3h)</li>
+          <li>Indie Hackers 제품 등록 (1h)</li>
+          <li>Product Hunt Upcoming 등록 (1h)</li>
+          <li>이메일 시퀀스 3단계 작성 (2h)</li>
+          <li>SaaS 디렉토리 ★★ 5곳 등록 (5h)</li>
+        </ul>
+      </div>
+      <div class="roadmap-week">
+        <h4>Week 3 — SNS 자동화 (4.5시간)</h4>
+        <ul>
+          <li>Twitter 3~4주치 트윗 초안 작성 (3h)</li>
+          <li>리퍼럴 프로그램 개발팀 위임 (1h)</li>
+          <li>#buildinpublic 포맷 세팅 (30m)</li>
+        </ul>
+      </div>
+      <div class="roadmap-week">
+        <h4>Week 4 — C등급 고효율 3개 실행 (9시간)</h4>
+        <ul>
+          <li>크몽 지인 리뷰 3개 확보 (2h)</li>
+          <li>HN Show HN 작성 + 대응 (5h)</li>
+          <li>GitHub Awesome Lists PR 3개 (2h)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="strategy-card" style="margin-top:24px;">
+      <h3>💰 ROI 요약</h3>
+      <table>
+        <thead><tr><th>등급</th><th>투자 시간</th><th>월 유지 비용</th><th>6개월 후 자동 유입</th></tr></thead>
+        <tbody>
+          <tr><td class="td-green">A등급 9개</td><td>7시간</td><td>0시간</td><td>이메일·바이럴 루프 상시</td></tr>
+          <tr><td class="td-amber">B등급 9개</td><td>15시간</td><td>월 2~3시간</td><td>300~1,500 UV (디렉토리+SNS)</td></tr>
+          <tr><td>C등급 선택 3개</td><td>9시간</td><td>상황별</td><td>500~3,000 UV (HN 런칭 포함)</td></tr>
+          <tr style="background:rgba(124,58,237,0.05)"><td><strong>합계</strong></td><td><strong>31시간</strong></td><td><strong>월 2~3시간</strong></td><td class="td-green"><strong>800~4,500 UV 자동 파이프라인</strong></td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
-  <div class="deliverable">
-    <div class="deliverable-num">03</div>
-    <div class="deliverable-body">
-      <div class="deliverable-top">
-        <span class="deliverable-title">Product Hunt 런칭 킷</span>
-        <span class="tag tag-launch">런칭</span>
-        <span class="tag tag-done">완료</span>
-      </div>
-      <p class="deliverable-desc">PH 제출 전체 자료. 태그라인, Description, Maker Comment, 스크린샷 5장 가이드, 런칭 전략(화요일 12:01 AM PST), 체크리스트 10개. Copy 버튼 포함.</p>
-      <div class="deliverable-links">
-        <a class="link-btn link-preview" href="https://webcorgi.github.io/zp-pages/ph-launch.html" target="_blank">🔗 라이브 미리보기</a>
-        <a class="link-btn link-source" href="https://github.com/webcorgi/zp-pages/blob/main/ph-launch.html" target="_blank">📁 소스</a>
-      </div>
-      <div class="deliverable-date">작성일: 2026-04-01 · 담당: CMO + 카피라이터 에이전트</div>
+  <!-- CMO 탭 -->
+  <div id="tab-cmo" class="tab-pane">
+    <div class="strategy-card">
+      <h3>👔 CMO — 채널 우선순위</h3>
+      <table>
+        <thead><tr><th>순위</th><th>채널</th><th>예상 월 유입</th><th>이유</th></tr></thead>
+        <tbody>
+          <tr><td class="td-green">1</td><td>Product Hunt</td><td>500~3,000 (런칭일)</td><td>SaaS 구매자 집결지, 하루 집중 노출</td></tr>
+          <tr><td class="td-green">2</td><td>Reddit 6개 서브레딧</td><td>200~800/월</td><td>무료, 반복 가능, 구매 의향 높음</td></tr>
+          <tr><td class="td-green">3</td><td>Hacker News Show HN</td><td>100~1,000 (포스팅일)</td><td>개발자·창업자 집결, 바이럴 가능</td></tr>
+          <tr><td class="td-amber">4</td><td>Twitter/X</td><td>100~500/월</td><td>복리형 팔로워 누적, 자동화 가능</td></tr>
+          <tr><td class="td-amber">5</td><td>Dev.to / Hashnode</td><td>50~300/월</td><td>장기 SEO 자산, 개발자 신뢰</td></tr>
+          <tr><td class="td-amber">6</td><td>GitHub Awesome Lists</td><td>20~150/월</td><td>1회 PR → 영구 무료 유입</td></tr>
+          <tr><td>7</td><td>크몽</td><td>30~200/월</td><td>국내 전환율 최고</td></tr>
+          <tr><td>8</td><td>네이버 블로그</td><td>50~300/월</td><td>"아임웹 대안" 검색 유입</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="strategy-card">
+      <h3>📊 월간 KPI 목표</h3>
+      <table>
+        <thead><tr><th>월차</th><th>방문자</th><th>구매</th><th>매출</th><th>누적</th></tr></thead>
+        <tbody>
+          <tr><td>1개월</td><td>1,000명</td><td>10건</td><td class="td-green">39만원</td><td>39만원</td></tr>
+          <tr><td>2개월</td><td>1,500명</td><td>18건</td><td class="td-green">70만원</td><td>109만원</td></tr>
+          <tr><td>3개월</td><td>2,500명</td><td>33건</td><td class="td-green">129만원</td><td>238만원</td></tr>
+          <tr><td>6개월</td><td>5,000명</td><td>75건</td><td class="td-green">293만원</td><td>~900만원</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="strategy-card">
+      <h3>🎯 30일 핵심 실행</h3>
+      <ul>
+        <li>Week 1: 크몽 리뷰 3개 + Buffer/Resend 자동화 세팅</li>
+        <li>Week 2: Reddit 6곳 + HN Show HN 포스팅</li>
+        <li>Week 3: Dev.to 아티클 1편 + Product Hunt Upcoming 등록</li>
+        <li>Week 4: Product Hunt 공식 런칭 (Top 5 목표)</li>
+      </ul>
     </div>
   </div>
 
-  <div class="deliverable">
-    <div class="deliverable-num">04</div>
-    <div class="deliverable-body">
-      <div class="deliverable-top">
-        <span class="deliverable-title">글로벌 마케팅 전략서</span>
-        <span class="tag tag-strategy">전략</span>
-        <span class="tag tag-done">완료</span>
-      </div>
-      <p class="deliverable-desc">채널별 홍보 전략 전체. Product Hunt, 크몽, Reddit, Indie Hackers, 디스콰이엇, SEO, 소셜 등 자동화 중심 글로벌 전략 포함.</p>
-      <div class="deliverable-links">
-        <span class="link-btn link-disabled">📄 MD 파일 (내부)</span>
-      </div>
-      <div class="deliverable-date">작성일: 2026-04-01 · 담당: CMO 에이전트</div>
+  <!-- 카피라이터 탭 -->
+  <div id="tab-copy" class="tab-pane">
+    <div class="strategy-card">
+      <h3>✍️ 핵심 슬로건 3종</h3>
+      <ul>
+        <li><strong>소유권 축:</strong> "Buy once. Own it forever." / "한 번 사면, 평생 내 것."</li>
+        <li><strong>공포 축:</strong> "Stop renting your website. Start owning it." / "홈페이지 월세, 이제 그만."</li>
+        <li><strong>속도 축:</strong> "Landing page live in 3 minutes. No code. No monthly bills." / "3분이면 됩니다."</li>
+      </ul>
+    </div>
+    <div class="strategy-card">
+      <h3>📢 채널별 맞춤 카피</h3>
+      <table>
+        <thead><tr><th>채널</th><th>핵심 문구</th><th>감성 비중</th></tr></thead>
+        <tbody>
+          <tr><td>Product Hunt</td><td>Buy once. Deploy in 3 minutes. Own the code forever.</td><td class="td-green">욕망 60%</td></tr>
+          <tr><td>Reddit (도발형)</td><td>I built a landing page tool. You own 100% of the code. No subscription. Ever.</td><td class="td-red">공포 70%</td></tr>
+          <tr><td>Twitter</td><td>Did you know you're paying $30/month just to rent your landing page?</td><td class="td-red">공포 60%</td></tr>
+          <tr><td>크몽</td><td>월 구독료 없이 평생 쓰는 내 홈페이지 — ZeroPack 랜딩페이지 제작</td><td class="td-amber">균형</td></tr>
+          <tr><td>네이버</td><td>아임웹 1년 396,000원 vs ZeroPack 평생 39,000원</td><td class="td-red">공포 80%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="strategy-card">
+      <h3>🧪 A/B 테스트 계획</h3>
+      <ul>
+        <li>Reddit: 스토리형(A) vs 도발형(C) — 서로 다른 서브레딧에 각 버전, 48시간 업보트 비교</li>
+        <li>Twitter: 비용 비교 이미지 vs 비용 비교 텍스트 — 저장/공유율 비교</li>
+        <li>랜딩페이지 CTA: "지금 시작하기" vs "평생 무료 배포 시작" — GA4 전환율 비교</li>
+      </ul>
     </div>
   </div>
 
-  <!-- 에이전트 팀 -->
-  <div class="section-title">마케팅 에이전트 팀 (7명)</div>
-  <div class="team-grid">
-    <div class="team-card">
-      <div class="team-role">👔 CMO</div>
-      <div class="team-desc">전체 전략 수립 · 채널 우선순위</div>
+  <!-- SEO 탭 -->
+  <div id="tab-seo" class="tab-pane">
+    <div class="strategy-card">
+      <h3>🔍 타겟 키워드 15개</h3>
+      <table>
+        <thead><tr><th>키워드</th><th>언어</th><th>경쟁도</th><th>전환 의도</th></tr></thead>
+        <tbody>
+          <tr><td>landing page builder no subscription</td><td>EN</td><td class="td-green">하</td><td class="td-green">높음</td></tr>
+          <tr><td>one time purchase landing page builder</td><td>EN</td><td class="td-green">하</td><td class="td-green">높음</td></tr>
+          <tr><td>buy once website builder lifetime deal</td><td>EN</td><td class="td-green">하</td><td class="td-green">높음</td></tr>
+          <tr><td>self hosted landing page builder</td><td>EN</td><td class="td-amber">중</td><td class="td-amber">중간</td></tr>
+          <tr><td>vercel landing page template</td><td>EN</td><td class="td-green">하</td><td class="td-amber">중간</td></tr>
+          <tr><td>no code landing page github deploy</td><td>EN</td><td class="td-green">하</td><td class="td-green">높음</td></tr>
+          <tr><td>framer alternative no monthly fee</td><td>EN</td><td class="td-amber">중</td><td class="td-green">높음</td></tr>
+          <tr><td>아임웹 대안</td><td>KO</td><td class="td-green">하</td><td class="td-green">높음</td></tr>
+          <tr><td>랜딩페이지 빌더 구독없음</td><td>KO</td><td class="td-green">하</td><td class="td-green">높음</td></tr>
+          <tr><td>홈페이지 만들기 평생 무료</td><td>KO</td><td class="td-amber">중</td><td class="td-amber">중간</td></tr>
+        </tbody>
+      </table>
     </div>
-    <div class="team-card">
-      <div class="team-role">✍️ 카피라이터</div>
-      <div class="team-desc">랜딩페이지 · 소개글 · 태그라인</div>
+    <div class="strategy-card">
+      <h3>📝 아티클 기획 5편</h3>
+      <ul>
+        <li>"Why I stopped paying $360/year for a landing page builder" — Dev.to, 구독 비용 고백형</li>
+        <li>"How to deploy a landing page in 3 minutes using GitHub + Vercel" — Hashnode, 기술 튜토리얼</li>
+        <li>"아임웹 vs ZeroPack: 5년 총비용 비교" — 네이버 블로그, 한국 SEO</li>
+        <li>"Lifetime deal vs subscription — the math every solo founder should know" — IH, 수학 분석</li>
+        <li>"Building a multilingual landing page (15 languages) with Next.js" — Dev.to, 기술 심화</li>
+      </ul>
     </div>
-    <div class="team-card">
-      <div class="team-role">🔍 SEO</div>
-      <div class="team-desc">키워드 · 메타태그 · 검색 최적화</div>
-    </div>
-    <div class="team-card">
-      <div class="team-role">📱 소셜</div>
-      <div class="team-desc">SNS 콘텐츠 · 커뮤니티 관리</div>
-    </div>
-    <div class="team-card">
-      <div class="team-role">📝 콘텐츠</div>
-      <div class="team-desc">블로그 · 튜토리얼 · 가이드</div>
-    </div>
-    <div class="team-card">
-      <div class="team-role">📈 그로스</div>
-      <div class="team-desc">퍼널 · 전환율 · 자동화</div>
-    </div>
-    <div class="team-card">
-      <div class="team-role">🇰🇷 한국</div>
-      <div class="team-desc">국내 채널 · 크몽 · 커뮤니티</div>
+    <div class="strategy-card">
+      <h3>🎯 3개월 SEO 목표</h3>
+      <ul>
+        <li>1개월차: 기술 SEO 완성 (hreflang, 구조화데이터, sitemap) + 아티클 1편</li>
+        <li>2개월차: 아티클 3편 + 백링크 10개+ + PageSpeed 90+</li>
+        <li>3개월차: 오가닉 PV 1,000+ / 핵심 키워드 Top 20 진입</li>
+      </ul>
     </div>
   </div>
 
-  <!-- 다음 예정 -->
-  <div class="section-title">다음 예정 산출물</div>
-  <div class="deliverable" style="opacity:0.6;">
-    <div class="deliverable-num">05</div>
-    <div class="deliverable-body">
-      <div class="deliverable-top">
-        <span class="deliverable-title">Reddit 론치 포스트</span>
-        <span class="tag tag-channel">소셜</span>
-        <span class="tag tag-wip">예정</span>
-      </div>
-      <p class="deliverable-desc">r/SideProject, r/nocode, r/webdev 타겟 포스팅. PH 런칭과 동시 발행 예정.</p>
-      <div class="deliverable-links"><span class="link-btn link-disabled">미완성</span></div>
+  <!-- 소셜 탭 -->
+  <div id="tab-social" class="tab-pane">
+    <div class="strategy-card">
+      <h3>📱 채널별 전략</h3>
+      <ul>
+        <li><strong>Twitter/X:</strong> 훅 트윗 60% + 빌드스토리 25% + 커뮤니티 15%. Buffer 자동화</li>
+        <li><strong>Reddit:</strong> 카르마 쌓기 → 가치제공형 포스팅. 스팸 절대 금지</li>
+        <li><strong>Hacker News:</strong> 단 1회 고품질 Show HN — 4월 11일(토) 밤 11시 KST</li>
+        <li><strong>Indie Hackers:</strong> 4화 연재 빌드 스토리 (수익 투명 공개형)</li>
+      </ul>
+    </div>
+    <div class="strategy-card">
+      <h3>🗓 4월 포스팅 캘린더 요약</h3>
+      <table>
+        <thead><tr><th>주</th><th>테마</th><th>주요 채널</th><th>핵심 행동</th></tr></thead>
+        <tbody>
+          <tr><td>Week 1</td><td>인지도 확보</td><td>Twitter + r/SideProject</td><td>훅 트윗 + 첫 Reddit 포스팅</td></tr>
+          <tr><td>Week 2</td><td>신뢰 구축</td><td>HN + Indie Hackers</td><td class="td-green">HN Show HN (4/11)</td></tr>
+          <tr><td>Week 3</td><td>전환 유도</td><td>Twitter + Reddit</td><td>고객 후기 공유 + 비교 콘텐츠</td></tr>
+          <tr><td>Week 4</td><td>커뮤니티 확장</td><td>전 채널</td><td>Product Hunt 예고 + 5월 준비</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="strategy-card">
+      <h3>📊 3개월 KPI</h3>
+      <ul>
+        <li>1개월: Twitter 150명, Reddit 유입 200세션, 소셜 전환 5건</li>
+        <li>3개월: 전 채널 팔로워 500명+, Reddit 유입 800세션/월</li>
+      </ul>
     </div>
   </div>
-  <div class="deliverable" style="opacity:0.6;">
-    <div class="deliverable-num">06</div>
-    <div class="deliverable-body">
-      <div class="deliverable-top">
-        <span class="deliverable-title">Indie Hackers 소개글</span>
-        <span class="tag tag-channel">콘텐츠</span>
-        <span class="tag tag-wip">예정</span>
-      </div>
-      <p class="deliverable-desc">1인 개발자 스토리 + 제품 소개. "How I built ZeroPack" 형식.</p>
-      <div class="deliverable-links"><span class="link-btn link-disabled">미완성</span></div>
+
+  <!-- 콘텐츠 탭 -->
+  <div id="tab-content" class="tab-pane">
+    <div class="strategy-card">
+      <h3>📝 YouTube 5편 기획</h3>
+      <table>
+        <thead><tr><th>#</th><th>제목</th><th>길이</th><th>예상 조회수</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>아임웹 vs ZeroPack 비용 비교 (5년 TCO)</td><td>8분</td><td class="td-green">2만~5만</td></tr>
+          <tr><td>2</td><td>3분 만에 랜딩페이지 배포 (GitHub+Vercel)</td><td>5분</td><td class="td-green">1만~3만</td></tr>
+          <tr><td>3</td><td>소상공인 홈페이지 3가지 실수</td><td>10분</td><td class="td-amber">8천~2만</td></tr>
+          <tr><td>4</td><td>15개 언어 다국어 설정 완전 정복</td><td>12분</td><td class="td-amber">5천~1만</td></tr>
+          <tr><td>5</td><td>프리랜서를 위한 ZeroPack 활용법</td><td>10분</td><td class="td-amber">5천~1만</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="strategy-card">
+      <h3>📧 이메일 온보딩 시퀀스 (자동화)</h3>
+      <ul>
+        <li><strong>Day 0 (구매 즉시):</strong> 빠른 시작 3단계 가이드 — 첫 배포 완료율 극대화</li>
+        <li><strong>Day 3:</strong> 핵심 기능 Top 3 심화 — 이탈 방지, Visual Editor 활용법</li>
+        <li><strong>Day 7:</strong> 프리랜서 활용 시나리오 + 리뷰 요청 — 크몽 리뷰 확보</li>
+      </ul>
+    </div>
+    <div class="strategy-card">
+      <h3>♻️ 콘텐츠 재활용 공식</h3>
+      <ul>
+        <li>원본 YouTube 1편 → Twitter 스레드 + 클립 + Dev.to + 네이버 블로그 + Reddit + 이메일 + 오픈카톡</li>
+        <li>발행 간격: 즉시(Twitter) → 3~5일(아티클) → 1~2주(뉴스레터)</li>
+      </ul>
     </div>
   </div>
-  <div class="deliverable" style="opacity:0.6;">
-    <div class="deliverable-num">07</div>
-    <div class="deliverable-body">
-      <div class="deliverable-top">
-        <span class="deliverable-title">디스콰이엇 등록 자료</span>
-        <span class="tag tag-channel">한국</span>
-        <span class="tag tag-wip">예정</span>
-      </div>
-      <p class="deliverable-desc">한국 인디해커 커뮤니티 디스콰이엇 제품 등록 + 메이커 스토리.</p>
-      <div class="deliverable-links"><span class="link-btn link-disabled">미완성</span></div>
+
+  <!-- 그로스 탭 -->
+  <div id="tab-growth" class="tab-pane">
+    <div class="strategy-card">
+      <h3>📈 Product Hunt 런칭 전략</h3>
+      <table>
+        <thead><tr><th>단계</th><th>핵심 행동</th></tr></thead>
+        <tbody>
+          <tr><td class="td-amber">D-30</td><td>Upcoming 등록, 헌터 후보 10명 리스트, 스크린샷 5장 제작, 서포터 50명 확보</td></tr>
+          <tr><td class="td-amber">D-7</td><td>헌터 최종 확정, 서포터 그룹 런칭 날짜 공지, 트위터 예고 예약</td></tr>
+          <tr><td class="td-amber">D-1</td><td>헌터 최종 확인, 서포터 리마인더, 답변 템플릿 10개 준비</td></tr>
+          <tr><td class="td-green">D-Day</td><td>KST 17:00 게시 → Maker Comment → 서포터 알림 → SNS 동시 발행 → 실시간 댓글 대응</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="strategy-card">
+      <h3>🎯 예상 결과 (Top 5 목표)</h3>
+      <ul>
+        <li><strong>낙관 (Top 3):</strong> 업보트 500+, 당일 UV 3,000~5,000, 구매 30~50건</li>
+        <li><strong>현실 (Top 5):</strong> 업보트 200~350, 당일 UV 1,200~2,500, 구매 10~20건</li>
+        <li><strong>보수 (Top 10):</strong> 업보트 80~150, 당일 UV 400~800, 구매 3~8건</li>
+      </ul>
+    </div>
+    <div class="strategy-card">
+      <h3>🔗 바이럴 루프</h3>
+      <ul>
+        <li>"Powered by ZeroPack" 유지 시 → 추가 템플릿 3개 무료</li>
+        <li>"Powered by ZeroPack" 제거 시 → 유료 Remove Branding 9,900원</li>
+        <li>리퍼럴: 추천인 5,000원 + 피추천인 5,000원. 100명 달성 시 평생 엑세스</li>
+      </ul>
+    </div>
+    <div class="strategy-card">
+      <h3>📁 SaaS 디렉토리 18곳 (이번 주 ★ 8곳 등록)</h3>
+      <ul>
+        <li><strong>★ 이번 주:</strong> AlternativeTo, BetaList, SaaShub, SoftwareWorld, No-Code List, SaaSworthy, Futurepedia, Indie Hackers Products</li>
+        <li><strong>★★ D+7:</strong> G2, Capterra, GetApp, Trustpilot, Starter Story</li>
+        <li><strong>★★★ D+30 검토:</strong> AppSumo LTD 딜</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 한국 탭 -->
+  <div id="tab-korea" class="tab-pane">
+    <div class="strategy-card">
+      <h3>🇰🇷 크몽 3단계 패키지</h3>
+      <table>
+        <thead><tr><th>패키지</th><th>가격</th><th>포함 내용</th><th>타겟</th></tr></thead>
+        <tbody>
+          <tr><td>스탠다드</td><td class="td-green">39,000원</td><td>라이선스 키 + 가이드 문서</td><td>직접 하고 싶은 분</td></tr>
+          <tr><td><strong>디럭스 ⭐추천</strong></td><td class="td-amber">69,000원</td><td>스탠다드 + 배포 세팅 + 문구 초안</td><td>세팅 맡기고 싶은 분</td></tr>
+          <tr><td>프리미엄</td><td>129,000원</td><td>디럭스 + 추가 수정 + 30일 AS</td><td>완성도 원하는 분</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="strategy-card">
+      <h3>⭐ 리뷰 3개 확보 전략</h3>
+      <ul>
+        <li>얼리버드 19,900원으로 실제 홈페이지 필요한 지인 3명 타겟</li>
+        <li>리뷰 요청 메시지 3버전 (친한 지인 / 비즈니스 지인 / 구매자 자동 발송용)</li>
+        <li>크몽 리뷰 0개 = 노출 거의 없음. 리뷰 3개가 서비스 생사를 가름</li>
+      </ul>
+    </div>
+    <div class="strategy-card">
+      <h3>📝 네이버 블로그 5편</h3>
+      <ul>
+        <li>"아임웹 vs ZeroPack 비용 비교" — 키워드: 아임웹 대안</li>
+        <li>"코딩 없이 3분 만에 홈페이지 만들기" — 키워드: 홈페이지 만들기</li>
+        <li>"소상공인 홈페이지 만드는 법" — 키워드: 소상공인 홈페이지</li>
+        <li>"Vercel 무료 호스팅 이용하는 방법" — 키워드: 버셀 호스팅</li>
+        <li>"ZeroPack 개발 스토리" — 브랜드 신뢰도</li>
+      </ul>
+    </div>
+    <div class="strategy-card">
+      <h3>📅 3개월 한국 로드맵</h3>
+      <ul>
+        <li><strong>4월:</strong> 크몽 리뷰 3개 확보 + 네이버 블로그 개시</li>
+        <li><strong>5월:</strong> 크몽 광고 + 디스콰이엇/오픈카톡 진입 + 협업 제안</li>
+        <li><strong>6월:</strong> 스마트스토어 출점 검토 + ZeroPack 자체 오픈톡 개설</li>
+      </ul>
+      <p style="margin-top:14px;padding:12px;background:rgba(124,58,237,0.1);border-radius:8px;font-size:13px;font-weight:700;color:var(--accent2);">"아임웹 1년 치 요금으로 ZeroPack은 평생 씁니다."</p>
     </div>
   </div>
 
   <div class="divider"></div>
-  <footer>ZeroPack Marketing Report · 최종 업데이트 2026-04-02 · <a href="https://zpack.app" style="color:var(--muted);">zpack.app</a></footer>
+  <div class="section-title">마케팅 에이전트 팀 (7명)</div>
+  <div class="team-grid">
+    <div class="team-card"><div class="team-role">👔 CMO</div><div class="team-desc">전체 전략 · KPI · 채널 우선순위</div></div>
+    <div class="team-card"><div class="team-role">✍️ 카피라이터</div><div class="team-desc">슬로건 · 채널별 카피 · A/B 테스트</div></div>
+    <div class="team-card"><div class="team-role">🔍 SEO</div><div class="team-desc">키워드 15개 · 아티클 기획 · 기술SEO</div></div>
+    <div class="team-card"><div class="team-role">📱 소셜</div><div class="team-desc">Twitter · Reddit · HN · IH 캘린더</div></div>
+    <div class="team-card"><div class="team-role">📝 콘텐츠</div><div class="team-desc">YouTube 5편 · Dev.to · 이메일 시퀀스</div></div>
+    <div class="team-card"><div class="team-role">📈 그로스</div><div class="team-desc">Product Hunt · 디렉토리 18곳 · 바이럴</div></div>
+    <div class="team-card"><div class="team-role">🇰🇷 한국</div><div class="team-desc">크몽 · 네이버 · 커뮤니티 · 3개월 로드맵</div></div>
+  </div>
+
+  <div class="divider"></div>
+  <footer>ZeroPack 마케팅 전략 보고서 · 2026-04-03 · <a href="https://zpack.app">zpack.app</a></footer>
 </div>
+
+<script>
+function showTab(name) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+</script>
 </body>
 </html>
