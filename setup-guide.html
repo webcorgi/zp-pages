@@ -3,433 +3,537 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZeroPack 시작 가이드 — GitHub · Vercel 초기 설정</title>
+<title>ZeroPack 시작 가이드 — 처음부터 끝까지</title>
 <style>
   :root {
-    --bg: #08080b;
-    --surface: #111115;
-    --surface2: #18181f;
-    --border: #222228;
-    --accent: #7c3aed;
-    --accent2: #a855f7;
-    --green: #22c55e;
-    --green-soft: #0a1f0f;
-    --blue: #3b82f6;
-    --blue-soft: #0d1a2e;
-    --amber: #f59e0b;
-    --amber-soft: #1a1200;
-    --red: #ef4444;
-    --text: #e8e8f0;
-    --muted: #5a5a70;
-    --muted2: #888899;
+    --bg:#08080b; --surface:#111115; --surface2:#18181f;
+    --border:#222228; --accent:#7c3aed; --accent2:#a855f7;
+    --green:#22c55e; --green-soft:#0a1f0f;
+    --blue:#3b82f6; --blue-soft:#0d1a2e;
+    --amber:#f59e0b; --amber-soft:#1a1200;
+    --red:#ef4444; --red-soft:#1a0505;
+    --text:#e8e8f0; --muted:#5a5a70; --muted2:#888899;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:var(--bg); color:var(--text); line-height:1.6; }
 
-  /* ── Header ── */
-  .hero { background: linear-gradient(160deg, #0f0820 0%, #08080b 60%); border-bottom: 1px solid var(--border); padding: 64px 20px 48px; text-align: center; }
-  .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 20px; }
-  .hero h1 { font-size: 36px; font-weight: 900; margin-bottom: 10px; }
-  .hero h1 span { color: var(--accent2); }
-  .hero-sub { font-size: 15px; color: var(--muted2); max-width: 540px; margin: 0 auto 28px; }
-  .hero-time { display: inline-flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); border-radius: 30px; padding: 6px 18px; font-size: 13px; color: var(--muted2); }
-  .hero-time strong { color: var(--green); }
+  .hero { background:linear-gradient(160deg,#0f0820 0%,#08080b 60%); border-bottom:1px solid var(--border); padding:64px 20px 48px; text-align:center; }
+  .hero-badge { display:inline-flex; align-items:center; gap:6px; background:var(--accent); color:#fff; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:4px 14px; border-radius:20px; margin-bottom:20px; }
+  .hero h1 { font-size:36px; font-weight:900; margin-bottom:10px; }
+  .hero h1 span { color:var(--accent2); }
+  .hero-sub { font-size:15px; color:var(--muted2); max-width:560px; margin:0 auto 24px; }
+  .hero-meta { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
+  .hero-pill { display:inline-flex; align-items:center; gap:6px; background:var(--surface); border:1px solid var(--border); border-radius:30px; padding:6px 16px; font-size:13px; color:var(--muted2); }
+  .hero-pill strong { color:var(--green); }
 
-  /* ── Layout ── */
-  .container { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+  .container { max-width:760px; margin:0 auto; padding:0 20px; }
 
-  /* ── Progress bar ── */
-  .progress-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 20px; position: sticky; top: 0; z-index: 100; }
-  .progress-steps { display: flex; justify-content: center; gap: 0; max-width: 600px; margin: 0 auto; }
-  .prog-step { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
-  .prog-step:not(:last-child)::after { content: ''; position: absolute; top: 13px; left: 50%; width: 100%; height: 2px; background: var(--border); z-index: -1; }
-  .prog-dot { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border); background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 4px; }
-  .prog-dot.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .prog-dot.done { background: var(--green); border-color: var(--green); color: #fff; }
-  .prog-label { font-size: 10px; color: var(--muted); text-align: center; white-space: nowrap; }
+  .progress-bar { background:var(--surface); border-bottom:1px solid var(--border); padding:18px 20px; position:sticky; top:0; z-index:100; }
+  .progress-steps { display:flex; justify-content:center; gap:0; max-width:640px; margin:0 auto; }
+  .prog-step { flex:1; display:flex; flex-direction:column; align-items:center; position:relative; }
+  .prog-step:not(:last-child)::after { content:''; position:absolute; top:13px; left:50%; width:100%; height:2px; background:var(--border); z-index:-1; }
+  .prog-dot { width:28px; height:28px; border-radius:50%; border:2px solid var(--border); background:var(--bg); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:var(--muted); margin-bottom:4px; }
+  .prog-dot.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+  .prog-label { font-size:10px; color:var(--muted); text-align:center; white-space:nowrap; }
 
-  /* ── Section ── */
-  .section { padding: 52px 0 0; }
-  .section-head { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 28px; }
-  .section-num { width: 40px; height: 40px; border-radius: 12px; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 900; color: #fff; flex-shrink: 0; }
-  .section-num.green { background: var(--green); }
-  .section-num.blue  { background: var(--blue); }
-  .section-num.amber { background: var(--amber); color: #000; }
-  .section-title { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
-  .section-desc { font-size: 13px; color: var(--muted2); }
+  .section { padding:52px 0 0; }
+  .section-head { display:flex; align-items:flex-start; gap:16px; margin-bottom:28px; }
+  .section-num { width:40px; height:40px; border-radius:12px; background:var(--accent); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:900; color:#fff; flex-shrink:0; }
+  .section-num.green { background:var(--green); }
+  .section-num.blue { background:var(--blue); }
+  .section-num.amber { background:var(--amber); color:#000; }
+  .section-num.teal { background:#0d9488; }
+  .section-num.rose { background:#e11d48; }
+  .section-num.gray { background:#374151; }
+  .section-title { font-size:22px; font-weight:800; margin-bottom:4px; }
+  .section-desc { font-size:13px; color:var(--muted2); }
 
-  /* ── Steps ── */
-  .steps { display: flex; flex-direction: column; gap: 12px; }
-  .step { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-  .step-header { display: flex; align-items: center; gap: 14px; padding: 16px 20px; }
-  .step-badge { width: 28px; height: 28px; border-radius: 8px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--muted2); flex-shrink: 0; }
-  .step-badge.accent { background: #2a1a4a; border-color: #4a2a8a; color: var(--accent2); }
-  .step-badge.green  { background: var(--green-soft); border-color: #166534; color: var(--green); }
-  .step-badge.blue   { background: var(--blue-soft); border-color: #1e3a5f; color: #60a5fa; }
-  .step-badge.amber  { background: var(--amber-soft); border-color: #6b4c00; color: var(--amber); }
-  .step-title { font-size: 15px; font-weight: 700; flex: 1; }
-  .step-body { padding: 0 20px 18px 62px; font-size: 13px; color: var(--muted2); line-height: 1.7; }
-  .step-body p { margin-bottom: 10px; }
-  .step-body p:last-child { margin-bottom: 0; }
+  .steps { display:flex; flex-direction:column; gap:12px; }
+  .step { background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+  .step-header { display:flex; align-items:center; gap:14px; padding:16px 20px; }
+  .step-badge { width:28px; height:28px; border-radius:8px; background:var(--surface2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:var(--muted2); flex-shrink:0; }
+  .step-badge.a  { background:#2a1a4a; border-color:#4a2a8a; color:var(--accent2); }
+  .step-badge.g  { background:var(--green-soft); border-color:#166534; color:var(--green); }
+  .step-badge.b  { background:var(--blue-soft); border-color:#1e3a5f; color:#60a5fa; }
+  .step-badge.am { background:var(--amber-soft); border-color:#6b4c00; color:var(--amber); }
+  .step-badge.t  { background:#042f2e; border-color:#0f766e; color:#2dd4bf; }
+  .step-badge.r  { background:var(--red-soft); border-color:#7f1d1d; color:#f87171; }
+  .step-title { font-size:15px; font-weight:700; flex:1; }
+  .step-body { padding:0 20px 18px 62px; font-size:13px; color:var(--muted2); line-height:1.8; }
+  .step-body p { margin-bottom:10px; }
+  .step-body p:last-child { margin-bottom:0; }
+  .step-body ol,.step-body ul { padding-left:18px; margin-bottom:10px; }
+  .step-body li { margin-bottom:6px; }
 
-  /* ── Tip / Warning ── */
-  .tip { background: var(--green-soft); border: 1px solid #166534; border-radius: 8px; padding: 12px 16px; font-size: 12px; color: #4ade80; margin-top: 10px; display: flex; gap: 8px; }
-  .tip-icon { flex-shrink: 0; }
-  .warn { background: #1a1200; border: 1px solid #6b4c00; border-radius: 8px; padding: 12px 16px; font-size: 12px; color: #fbbf24; margin-top: 10px; display: flex; gap: 8px; }
-  .info { background: var(--blue-soft); border: 1px solid #1e3a5f; border-radius: 8px; padding: 12px 16px; font-size: 12px; color: #60a5fa; margin-top: 10px; display: flex; gap: 8px; }
+  .tip  { background:var(--green-soft); border:1px solid #166534; border-radius:8px; padding:12px 16px; font-size:12px; color:#4ade80; margin-top:10px; display:flex; gap:8px; }
+  .warn { background:#1a1200; border:1px solid #6b4c00; border-radius:8px; padding:12px 16px; font-size:12px; color:#fbbf24; margin-top:10px; display:flex; gap:8px; }
+  .info { background:var(--blue-soft); border:1px solid #1e3a5f; border-radius:8px; padding:12px 16px; font-size:12px; color:#60a5fa; margin-top:10px; display:flex; gap:8px; }
+  .danger { background:var(--red-soft); border:1px solid #7f1d1d; border-radius:8px; padding:12px 16px; font-size:12px; color:#f87171; margin-top:10px; display:flex; gap:8px; }
 
-  /* ── Screenshot placeholder ── */
-  .screen { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-top: 12px; text-align: center; }
-  .screen-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-  .screen-img { width: 100%; max-width: 480px; border-radius: 6px; border: 1px solid var(--border); }
+  .flow-box { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:16px 20px; margin-top:12px; }
+  .flow-row { display:flex; align-items:center; gap:10px; padding:6px 0; font-size:13px; }
+  .flow-row:not(:last-child) { border-bottom:1px solid var(--border); }
+  .flow-num { width:22px; height:22px; background:var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:900; color:#fff; flex-shrink:0; }
+  .flow-text { color:var(--text); }
+  .flow-sub  { color:var(--muted); font-size:11px; }
 
-  /* ── Button link ── */
-  .btn-link { display: inline-flex; align-items: center; gap: 6px; background: var(--accent); color: #fff; font-size: 13px; font-weight: 700; padding: 8px 18px; border-radius: 8px; text-decoration: none; margin-top: 10px; }
-  .btn-link:hover { opacity: 0.85; }
-  .btn-link.outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-link { display:inline-flex; align-items:center; gap:6px; background:var(--accent); color:#fff; font-size:13px; font-weight:700; padding:8px 18px; border-radius:8px; text-decoration:none; margin-top:10px; }
+  .btn-link:hover { opacity:.85; }
+  .btn-link.outline { background:transparent; border:1px solid var(--border); color:var(--text); }
 
-  /* ── URL copy box ── */
-  .url-box { display: flex; align-items: center; gap: 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; margin-top: 10px; }
-  .url-text { font-family: monospace; font-size: 13px; color: var(--accent2); flex: 1; word-break: break-all; }
-  .url-copy { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 700; color: var(--muted2); cursor: pointer; white-space: nowrap; }
-  .url-copy:hover { color: var(--text); }
+  .url-box { display:flex; align-items:center; gap:10px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:10px 14px; margin-top:10px; }
+  .url-text { font-family:monospace; font-size:13px; color:var(--accent2); flex:1; word-break:break-all; }
 
-  /* ── Divider ── */
-  .divider { height: 1px; background: var(--border); margin: 52px 0 0; }
+  .error-box { background:var(--red-soft); border:1px solid #7f1d1d; border-radius:10px; overflow:hidden; margin-top:12px; }
+  .error-row { padding:12px 16px; border-bottom:1px solid rgba(255,255,255,.04); }
+  .error-row:last-child { border-bottom:none; }
+  .error-code { font-size:11px; font-weight:800; color:#f87171; margin-bottom:4px; }
+  .error-desc { font-size:12px; color:#fca5a5; }
+  .error-fix  { font-size:12px; color:var(--muted2); margin-top:4px; }
+  .error-fix strong { color:#fcd34d; }
 
-  /* ── Done section ── */
-  .done-section { padding: 48px 0 80px; text-align: center; }
-  .done-icon { font-size: 52px; margin-bottom: 16px; }
-  .done-title { font-size: 26px; font-weight: 900; margin-bottom: 8px; }
-  .done-desc { font-size: 14px; color: var(--muted2); max-width: 480px; margin: 0 auto 28px; }
-  .done-links { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+  .divider { height:1px; background:var(--border); margin:52px 0 0; }
 
-  /* ── FAQ ── */
-  .faq { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-top: 16px; }
-  .faq-item { padding: 16px 20px; border-bottom: 1px solid var(--border); }
-  .faq-item:last-child { border-bottom: none; }
-  .faq-q { font-size: 13px; font-weight: 700; margin-bottom: 6px; display: flex; gap: 8px; }
-  .faq-q::before { content: 'Q.'; color: var(--accent2); flex-shrink: 0; }
-  .faq-a { font-size: 12px; color: var(--muted2); padding-left: 24px; }
+  .done-section { padding:48px 0 80px; text-align:center; }
+  .done-icon { font-size:52px; margin-bottom:16px; }
+  .done-title { font-size:26px; font-weight:900; margin-bottom:8px; }
+  .done-desc { font-size:14px; color:var(--muted2); max-width:480px; margin:0 auto 28px; }
+  .done-links { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
 
-  footer { text-align: center; padding: 20px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); }
+  .faq-list { display:flex; flex-direction:column; gap:0; background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-top:0; }
+  .faq-item { padding:16px 20px; border-bottom:1px solid var(--border); }
+  .faq-item:last-child { border-bottom:none; }
+  .faq-q { font-size:13px; font-weight:700; margin-bottom:6px; display:flex; gap:8px; }
+  .faq-q::before { content:'Q.'; color:var(--accent2); flex-shrink:0; }
+  .faq-a { font-size:12px; color:var(--muted2); padding-left:24px; line-height:1.7; }
 
-  @media (max-width: 500px) {
-    .hero h1 { font-size: 26px; }
-    .prog-label { display: none; }
-  }
+  footer { text-align:center; padding:20px; font-size:12px; color:var(--muted); border-top:1px solid var(--border); }
+  @media(max-width:500px) { .hero h1 { font-size:26px; } .prog-label { display:none; } }
 </style>
 </head>
 <body>
 
 <!-- Hero -->
 <div class="hero">
-  <div class="hero-badge">🚀 Getting Started Guide</div>
-  <h1>ZeroPack <span>외부 도구</span> 초기 설정</h1>
-  <p class="hero-sub">GitHub와 Vercel을 처음 사용해도 괜찮아요.<br>이 가이드를 따라하면 내 웹사이트가 인터넷에 올라갑니다.</p>
-  <div class="hero-time">⏱ 예상 소요 시간: <strong>약 10분</strong></div>
+  <div class="hero-badge">📖 완전 초보자용 가이드</div>
+  <h1>ZeroPack <span>처음 시작하기</span></h1>
+  <p class="hero-sub">GitHub·Vercel을 처음 들어봐도 괜찮아요.<br>이 가이드를 순서대로 따라하면 내 홈페이지가 인터넷에 올라갑니다.</p>
+  <div class="hero-meta">
+    <div class="hero-pill">⏱ 예상 소요 시간: <strong>약 10~15분</strong></div>
+    <div class="hero-pill">💻 필요한 것: <strong>컴퓨터 + 이메일 주소</strong></div>
+    <div class="hero-pill">💰 비용: <strong>GitHub·Vercel 모두 무료</strong></div>
+  </div>
 </div>
 
 <!-- Progress -->
 <div class="progress-bar">
   <div class="progress-steps">
-    <div class="prog-step">
-      <div class="prog-dot active">1</div>
-      <div class="prog-label">GitHub 가입</div>
-    </div>
-    <div class="prog-step">
-      <div class="prog-dot">2</div>
-      <div class="prog-label">저장소 연결</div>
-    </div>
-    <div class="prog-step">
-      <div class="prog-dot">3</div>
-      <div class="prog-label">Vercel 가입</div>
-    </div>
-    <div class="prog-step">
-      <div class="prog-dot">4</div>
-      <div class="prog-label">배포</div>
-    </div>
-    <div class="prog-step">
-      <div class="prog-dot">5</div>
-      <div class="prog-label">완료</div>
-    </div>
+    <div class="prog-step"><div class="prog-dot active">1</div><div class="prog-label">GitHub 가입</div></div>
+    <div class="prog-step"><div class="prog-dot">2</div><div class="prog-label">키 입력</div></div>
+    <div class="prog-step"><div class="prog-dot">3</div><div class="prog-label">Vercel 연동</div></div>
+    <div class="prog-step"><div class="prog-dot">4</div><div class="prog-label">배포 설정</div></div>
+    <div class="prog-step"><div class="prog-dot">5</div><div class="prog-label">배포 완료</div></div>
+    <div class="prog-step"><div class="prog-dot">6</div><div class="prog-label">내용 수정</div></div>
   </div>
 </div>
 
 <div class="container">
 
-  <!-- ── STEP 1: GitHub 가입 ── -->
-  <div class="section">
-    <div class="section-head">
-      <div class="section-num">1</div>
-      <div>
-        <div class="section-title">GitHub 계정 만들기</div>
-        <div class="section-desc">GitHub는 내 웹사이트 파일을 보관하는 창고입니다. 무료로 사용할 수 있어요.</div>
+<!-- ── STEP 1: GitHub 가입 ── -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-num">1</div>
+    <div>
+      <div class="section-title">GitHub 계정 만들기</div>
+      <div class="section-desc">GitHub는 내 홈페이지 파일이 저장되는 공간입니다. 무료이고, 한 번 만들면 평생 씁니다.</div>
+    </div>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-header"><div class="step-badge a">1-1</div><div class="step-title">GitHub 가입 페이지 접속</div></div>
+      <div class="step-body">
+        <p>아래 버튼을 클릭하거나 브라우저에서 <strong>github.com/signup</strong> 을 입력하세요.</p>
+        <a class="btn-link" href="https://github.com/signup" target="_blank">🔗 GitHub 가입 페이지 열기</a>
+        <div class="tip"><span>💡</span> 이미 GitHub 계정이 있다면 1단계는 건너뛰고 2단계로 이동하세요.</div>
       </div>
     </div>
-
-    <div class="steps">
-      <div class="step">
-        <div class="step-header">
-          <div class="step-badge accent">1-1</div>
-          <div class="step-title">GitHub 사이트 접속</div>
-        </div>
-        <div class="step-body">
-          <p>아래 버튼을 클릭하거나, 브라우저에서 <strong>github.com</strong>을 입력해 접속하세요.</p>
-          <a class="btn-link" href="https://github.com/signup" target="_blank">🔗 GitHub 가입 페이지 열기</a>
-          <div class="tip"><span class="tip-icon">💡</span> 이미 GitHub 계정이 있다면 이 단계는 건너뛰세요.</div>
-        </div>
+    <div class="step">
+      <div class="step-header"><div class="step-badge a">1-2</div><div class="step-title">이메일 · 비밀번호 · 사용자명 입력</div></div>
+      <div class="step-body">
+        <ol>
+          <li>자주 쓰는 <strong>이메일 주소</strong> 입력</li>
+          <li><strong>비밀번호</strong> 설정 (영문+숫자 조합 8자 이상)</li>
+          <li><strong>사용자명(username)</strong> 입력 — 영문·숫자·하이픈(-) 만 사용 가능</li>
+        </ol>
+        <div class="warn"><span>⚠️</span> 사용자명은 나중에 내 저장소 주소에 들어갑니다. 기억하기 쉬운 이름으로 정하세요. (예: myname, john-kim)</div>
       </div>
-
-      <div class="step">
-        <div class="step-header">
-          <div class="step-badge accent">1-2</div>
-          <div class="step-title">이메일 · 비밀번호 · 사용자명 입력</div>
-        </div>
-        <div class="step-body">
-          <p>① 자주 사용하는 <strong>이메일 주소</strong> 입력<br>
-             ② <strong>비밀번호</strong> 설정 (영문+숫자 조합 8자 이상)<br>
-             ③ <strong>사용자명(username)</strong> 입력 — 영문·숫자·하이픈만 가능</p>
-          <div class="warn"><span>⚠️</span> 사용자명은 나중에 웹사이트 주소에도 들어가니 기억하기 쉬운 이름으로 정하세요.</div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-header">
-          <div class="step-badge accent">1-3</div>
-          <div class="step-title">이메일 인증</div>
-        </div>
-        <div class="step-body">
-          <p>가입 후 입력한 이메일로 인증 메일이 옵니다.<br>
-          메일을 열고 <strong>"Verify email address"</strong> 버튼을 클릭하세요.</p>
-          <div class="tip"><span class="tip-icon">✅</span> 인증이 완료되면 GitHub 가입 끝!</div>
-        </div>
+    </div>
+    <div class="step">
+      <div class="step-header"><div class="step-badge a">1-3</div><div class="step-title">이메일 인증 완료</div></div>
+      <div class="step-body">
+        <p>가입 후 입력한 이메일로 인증 메일이 옵니다.<br>
+        메일을 열고 <strong>"Verify email address"</strong> 버튼을 클릭하세요.</p>
+        <div class="tip"><span>✅</span> 인증 완료 후 GitHub 메인 화면이 보이면 1단계 끝!</div>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="divider"></div>
+<div class="divider"></div>
 
-  <!-- ── STEP 2: ZeroPack에서 GitHub 연결 ── -->
-  <div class="section">
-    <div class="section-head">
-      <div class="section-num blue">2</div>
-      <div>
-        <div class="section-title">ZeroPack에서 GitHub 연결하기</div>
-        <div class="section-desc">ZeroPack이 내 GitHub에 저장소를 자동으로 만들어줍니다.</div>
+<!-- ── STEP 2: zpack.app 접속 & 라이선스 키 ── -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-num blue">2</div>
+    <div>
+      <div class="section-title">ZeroPack 로그인 & 라이선스 키 입력</div>
+      <div class="section-desc">크몽에서 구매한 라이선스 키를 ZeroPack에 입력합니다.</div>
+    </div>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-header"><div class="step-badge b">2-1</div><div class="step-title">zpack.app 접속 후 GitHub으로 로그인</div></div>
+      <div class="step-body">
+        <p>아래 버튼을 클릭해 ZeroPack을 여세요.</p>
+        <a class="btn-link" href="https://zpack.app" target="_blank">🔗 zpack.app 열기</a>
+        <p style="margin-top:12px;"><strong>"GitHub으로 로그인"</strong> 버튼을 클릭하면 GitHub 인증 화면이 열립니다.<br>
+        방금 만든 GitHub 계정으로 로그인하세요.</p>
+        <div class="info"><span>ℹ️</span> "ZeroPack이 내 GitHub 계정 정보에 접근하도록 허용하시겠습니까?" 화면이 뜨면 <strong>Authorize(허용)</strong>를 클릭하세요. 안전한 과정입니다.</div>
       </div>
     </div>
-
-    <div class="steps">
-      <div class="step">
-        <div class="step-header">
-          <div class="step-badge blue">2-1</div>
-          <div class="step-title">ZeroPack 로그인 후 대시보드 접속</div>
-        </div>
-        <div class="step-body">
-          <p>ZeroPack(<strong>zpack.app</strong>)에 로그인하고 대시보드로 이동하세요.</p>
-          <a class="btn-link" href="https://zpack.app" target="_blank">🔗 zpack.app 열기</a>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-header">
-          <div class="step-badge blue">2-2</div>
-          <div class="step-title">"GitHub 연결" 버튼 클릭</div>
-        </div>
-        <div class="step-body">
-          <p>대시보드에서 <strong>"GitHub 연결"</strong> 또는 <strong>"Connect GitHub"</strong> 버튼을 클릭하세요.</p>
-          <p>GitHub 로그인 화면이 뜨면 방금 만든 계정으로 로그인합니다.</p>
-          <div class="info"><span>ℹ️</span> "ZeroPack이 내 GitHub 계정에 접근하도록 허용할까요?" 라는 화면이 뜨면 <strong>Authorize(허용)</strong>를 클릭하세요. 안전한 과정입니다.</div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-header">
-          <div class="step-badge blue">2-3</div>
-          <div class="step-title">저장소 자동 생성 확인</div>
-        </div>
-        <div class="step-body">
-          <p>ZeroPack이 내 GitHub에 저장소(Repository)를 자동으로 만듭니다.<br>
-          GitHub 사이트에서 확인하려면:</p>
-          <p>github.com → 우측 상단 프로필 → <strong>Your repositories</strong></p>
-          <div class="tip"><span class="tip-icon">✅</span> 저장소가 보이면 연결 성공!</div>
-        </div>
+    <div class="step">
+      <div class="step-header"><div class="step-badge b">2-2</div><div class="step-title">라이선스 키 입력</div></div>
+      <div class="step-body">
+        <p>로그인 후 라이선스 키 입력창이 나타납니다.<br>
+        크몽 구매 완료 후 받은 <strong>라이선스 키</strong>를 정확히 입력하고 확인을 클릭하세요.</p>
+        <div class="warn"><span>⚠️</span> 라이선스 키는 공백 없이 정확히 입력하세요. 대소문자도 구분됩니다.</div>
+        <div class="tip"><span>💡</span> 키를 잘 모르겠으면 크몽 구매 내역 또는 판매자 메시지를 확인하세요.</div>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="divider"></div>
+<div class="divider"></div>
 
-  <!-- ── STEP 3: Vercel 가입 ── -->
-  <div class="section">
-    <div class="section-head">
-      <div class="section-num green">3</div>
-      <div>
-        <div class="section-title">Vercel 계정 만들기</div>
-        <div class="section-desc">Vercel은 내 웹사이트를 인터넷에 올려주는 서비스입니다. 기본 사용은 무료예요.</div>
+<!-- ── STEP 3: Vercel 연동 ── -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-num green">3</div>
+    <div>
+      <div class="section-title">Vercel 연동하기</div>
+      <div class="section-desc">Vercel은 내 홈페이지를 인터넷에 올려주는 서비스입니다. GitHub 계정으로 무료 가입 후 ZeroPack과 연결합니다.</div>
+    </div>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-header"><div class="step-badge g">3-1</div><div class="step-title">"Vercel 연동 시작" 버튼 클릭</div></div>
+      <div class="step-body">
+        <p>ZeroPack 화면에서 <strong>"Vercel 연동 시작"</strong> 버튼을 클릭하세요.<br>
+        새 창(팝업)이 열리며 Vercel Integration 페이지가 나타납니다.</p>
+        <div class="warn"><span>⚠️</span> 팝업이 차단됐다면? 브라우저 주소창 오른쪽에 팝업 차단 아이콘이 뜹니다. 클릭 후 "팝업 허용"을 선택하고 다시 버튼을 눌러주세요.</div>
       </div>
     </div>
-
-    <div class="steps">
-      <div class="step">
-        <div class="step-header">
-          <div class="step-badge green">3-1</div>
-          <div class="step-title">Vercel 사이트 접속</div>
-        </div>
-        <div class="step-body">
-          <p>아래 버튼을 클릭해 Vercel 가입 페이지로 이동하세요.</p>
-          <a class="btn-link" href="https://vercel.com/signup" target="_blank">🔗 Vercel 가입 페이지 열기</a>
-        </div>
+    <div class="step">
+      <div class="step-header"><div class="step-badge g">3-2</div><div class="step-title">Vercel 계정 없으면 먼저 가입</div></div>
+      <div class="step-body">
+        <p>Vercel에 계정이 없다면 <strong>"Continue with GitHub"</strong>를 클릭해 GitHub 계정으로 바로 가입하세요.<br>
+        별도 비밀번호 필요 없이 GitHub 계정 하나로 연결됩니다.</p>
+        <div class="tip"><span>💡</span> 이미 Vercel 계정이 있다면 바로 로그인하시면 됩니다.</div>
       </div>
-
-      <div class="step">
-        <div class="step-header">
-          <div class="step-badge green">3-2</div>
-          <div class="step-title">"Continue with GitHub"로 가입 (추천)</div>
+    </div>
+    <div class="step">
+      <div class="step-header"><div class="step-badge g">3-3</div><div class="step-title">Integration 설치 (5단계 순서대로)</div></div>
+      <div class="step-body">
+        <p>Vercel Integration 페이지에서 아래 순서대로 진행하세요:</p>
+        <div class="flow-box">
+          <div class="flow-row"><div class="flow-num">1</div><div><div class="flow-text"><strong>"Add Integration"</strong> 버튼 클릭</div></div></div>
+          <div class="flow-row"><div class="flow-num">2</div><div><div class="flow-text">내 <strong>Vercel 계정 선택</strong></div></div></div>
+          <div class="flow-row"><div class="flow-num">3</div><div><div class="flow-text"><strong>"All Projects"</strong> 선택 <span style="color:#f59e0b;">(권장, 이걸 선택해야 자동 배포됩니다)</span></div></div></div>
+          <div class="flow-row"><div class="flow-num">4</div><div><div class="flow-text"><strong>"Install"</strong> 버튼 클릭</div></div></div>
+          <div class="flow-row"><div class="flow-num">5</div><div><div class="flow-text">설치 완료 후 ZeroPack으로 돌아와 <strong>"연동 완료 확인"</strong> 버튼 클릭</div></div></div>
         </div>
-        <div class="step-body">
-          <p>가입 화면에서 <strong>"Continue with GitHub"</strong> 버튼을 클릭하세요.<br>
-          GitHub 계정으로 바로 가입되어 따로 비밀번호를 만들 필요가 없습니다.</p>
-          <div class="tip"><span class="tip-icon">💡</span> 이 방법이 가장 간편하고, 나중에 자동 배포 연결도 쉬워집니다.</div>
-        </div>
+        <div class="info"><span>ℹ️</span> "All Projects" 대신 "Specific Projects"를 선택하면 나중에 배포 오류가 날 수 있습니다. 반드시 "All Projects"를 선택하세요.</div>
       </div>
-
-      <div class="step">
-        <div class="step-header">
-          <div class="step-badge green">3-3</div>
-          <div class="step-title">권한 허용 및 가입 완료</div>
-        </div>
-        <div class="step-body">
-          <p>"Vercel이 내 GitHub에 접근하도록 허용할까요?" 화면이 뜨면<br>
-          <strong>Authorize Vercel</strong>을 클릭하세요.</p>
-          <p>이름·직업 등 몇 가지 질문이 나올 수 있습니다. 아무렇게나 입력해도 됩니다.</p>
-          <div class="tip"><span class="tip-icon">✅</span> Vercel 대시보드 화면이 보이면 가입 완료!</div>
-        </div>
+    </div>
+    <div class="step">
+      <div class="step-header"><div class="step-badge g">3-4</div><div class="step-title">연동 완료 확인</div></div>
+      <div class="step-body">
+        <p>ZeroPack 화면에 <strong>"연동 완료!"</strong> 메시지가 뜨면 성공입니다.<br>
+        "다음으로" 버튼을 클릭해 4단계로 넘어가세요.</p>
+        <div class="tip"><span>✅</span> Vercel 연동 완료! 이제 자동 배포 준비가 됐습니다.</div>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="divider"></div>
+<div class="divider"></div>
 
-  <!-- ── STEP 4: 배포 ── -->
-  <div class="section">
-    <div class="section-head">
-      <div class="section-num amber">4</div>
-      <div>
-        <div class="section-title">ZeroPack에서 배포하기</div>
-        <div class="section-desc">이제 내 웹사이트를 인터넷에 올릴 차례입니다. 버튼 몇 번이면 끝!</div>
+<!-- ── STEP 4: 배포 설정 ── -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-num amber">4</div>
+    <div>
+      <div class="section-title">배포 설정하기</div>
+      <div class="section-desc">프로젝트 이름과 사이트 언어를 설정합니다. 이름이 내 사이트 주소가 됩니다.</div>
+    </div>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-header"><div class="step-badge am">4-1</div><div class="step-title">프로젝트 이름 입력</div></div>
+      <div class="step-body">
+        <p>프로젝트 이름을 입력하세요. 이 이름이 내 사이트 주소가 됩니다.</p>
+        <div class="url-box"><div class="url-text">https://<span style="color:#fbbf24;">내가-입력한-이름</span>.vercel.app</div></div>
+        <div class="warn" style="margin-top:12px;"><span>⚠️</span> 규칙: 영문 소문자, 숫자, 하이픈(-) 만 사용 가능. 공백·한글·특수문자 불가. (예: my-cafe, john-portfolio)</div>
+        <div class="info"><span>ℹ️</span> 나중에 내 도메인(예: mycafe.com)을 연결하면 이 주소는 쓰지 않아도 됩니다. 처음엔 대충 정해도 됩니다.</div>
       </div>
     </div>
-
-    <div class="steps">
-      <div class="step">
-        <div class="step-header">
-          <div class="step-badge amber">4-1</div>
-          <div class="step-title">ZeroPack에서 "Vercel 연결" 클릭</div>
-        </div>
-        <div class="step-body">
-          <p>ZeroPack 대시보드로 돌아와서 <strong>"Vercel 연결"</strong> 또는 <strong>"Deploy"</strong> 버튼을 클릭하세요.</p>
-          <p>Vercel 로그인 화면이 뜨면 방금 만든 계정으로 로그인합니다.</p>
-        </div>
+    <div class="step">
+      <div class="step-header"><div class="step-badge am">4-2</div><div class="step-title">배포 언어 선택</div></div>
+      <div class="step-body">
+        <p>사이트가 기본으로 표시될 언어를 선택하세요.</p>
+        <ul>
+          <li><strong>한국어</strong> — 국내 고객 대상 사이트 (기본값 추천)</li>
+          <li><strong>영어</strong> — 영어권 고객 또는 글로벌 사이트</li>
+        </ul>
+        <div class="tip"><span>💡</span> 나중에 Visual Editor에서 내용을 바꾸면 되니, 지금은 주 사용 언어만 고르세요.</div>
       </div>
-
-      <div class="step">
-        <div class="step-header">
-          <div class="step-badge amber">4-2</div>
-          <div class="step-title">프로젝트 가져오기(Import)</div>
-        </div>
-        <div class="step-body">
-          <p>Vercel이 GitHub 저장소 목록을 보여줍니다.<br>
-          ZeroPack이 만들어 준 저장소 옆 <strong>Import</strong> 버튼을 클릭하세요.</p>
-          <div class="info"><span>ℹ️</span> 저장소가 보이지 않으면 <strong>"Adjust GitHub App Permissions"</strong>를 클릭해 권한을 추가하세요.</div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-header">
-          <div class="step-badge amber">4-3</div>
-          <div class="step-title">"Deploy" 버튼 클릭</div>
-        </div>
-        <div class="step-body">
-          <p>설정 화면이 나오면 <strong>아무것도 바꾸지 않고</strong> 바로 <strong>Deploy</strong>를 클릭하세요.<br>
-          ZeroPack이 이미 최적 설정을 해뒀습니다.</p>
-          <p>배포가 진행되는 동안 로딩 화면이 보입니다. 보통 1~2분 소요됩니다.</p>
-          <div class="tip"><span class="tip-icon">🎉</span> 완료되면 내 웹사이트 주소가 나타납니다!</div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-header">
-          <div class="step-badge amber">4-4</div>
-          <div class="step-title">배포 주소 확인</div>
-        </div>
-        <div class="step-body">
-          <p>Vercel이 자동으로 주소를 생성합니다. 예시:</p>
-          <div class="url-box">
-            <div class="url-text">https://내-사이트이름.vercel.app</div>
-            <button class="url-copy" onclick="navigator.clipboard?.writeText('https://내-사이트이름.vercel.app');this.textContent='복사됨!'">복사</button>
-          </div>
-          <p style="margin-top:12px;">이 주소를 브라우저에 입력하면 내 웹사이트가 열립니다. 🎊</p>
-          <div class="tip"><span class="tip-icon">💡</span> ZeroPack 대시보드에서 배포 주소를 입력하면 이후 내용 수정 시 자동으로 반영됩니다.</div>
-        </div>
+    </div>
+    <div class="step">
+      <div class="step-header"><div class="step-badge am">4-3</div><div class="step-title">"자동 배포 시작" 버튼 클릭</div></div>
+      <div class="step-body">
+        <p>설정이 끝났으면 <strong>"자동 배포 시작"</strong> 버튼을 클릭하세요.</p>
+        <div class="danger"><span>🚫</span> 배포가 진행되는 동안 <strong>브라우저를 닫거나 새로고침하지 마세요!</strong> 배포가 취소될 수 있습니다.</div>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="divider"></div>
+<div class="divider"></div>
 
-  <!-- ── Done ── -->
-  <div class="done-section">
-    <div class="done-icon">🎊</div>
-    <div class="done-title">초기 설정 완료!</div>
-    <div class="done-desc">GitHub와 Vercel 연결이 끝났습니다.<br>이제 ZeroPack에서 내용을 수정하면 자동으로 웹사이트에 반영됩니다.</div>
-    <div class="done-links">
-      <a class="btn-link" href="https://zpack.app" target="_blank">🏠 ZeroPack 대시보드</a>
-      <a class="btn-link outline" href="https://vercel.com/dashboard" target="_blank">▲ Vercel 대시보드</a>
-      <a class="btn-link outline" href="https://github.com" target="_blank">🐙 GitHub</a>
+<!-- ── STEP 5: 배포 완료 ── -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-num teal">5</div>
+    <div>
+      <div class="section-title">배포 완료 확인</div>
+      <div class="section-desc">자동 배포가 진행됩니다. 1~3분 정도 기다리면 내 사이트가 완성됩니다.</div>
     </div>
   </div>
-
-  <div class="divider"></div>
-
-  <!-- ── FAQ ── -->
-  <div class="section">
-    <div class="section-head">
-      <div class="section-num" style="background:#333;">?</div>
-      <div>
-        <div class="section-title">자주 묻는 질문</div>
-        <div class="section-desc">막히는 부분이 있다면 아래를 확인하세요.</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-header"><div class="step-badge t">5-1</div><div class="step-title">배포 진행 대기 (1~3분)</div></div>
+      <div class="step-body">
+        <p>화면에 배포 진행 로그가 표시됩니다. ZeroPack이 다음 작업을 자동으로 수행합니다:</p>
+        <div class="flow-box">
+          <div class="flow-row"><div class="flow-num">✓</div><div class="flow-text">내 GitHub에 저장소(코드) 자동 생성</div></div>
+          <div class="flow-row"><div class="flow-num">✓</div><div class="flow-text">Vercel 프로젝트 자동 생성</div></div>
+          <div class="flow-row"><div class="flow-num">✓</div><div class="flow-text">환경 변수 자동 설정</div></div>
+          <div class="flow-row"><div class="flow-num">✓</div><div class="flow-text">Vercel 빌드 시작 (1~3분 소요)</div></div>
+          <div class="flow-row"><div class="flow-num">🎉</div><div class="flow-text" style="color:#22c55e;font-weight:700;">배포 완료 — 내 사이트 URL 생성!</div></div>
+        </div>
+        <div class="info"><span>ℹ️</span> "사이트 버튼이 활성화됩니다 (1~3분 소요)"라는 메시지가 보이면 정상입니다. Vercel 빌드가 끝날 때까지 기다려주세요.</div>
       </div>
     </div>
-    <div class="faq">
-      <div class="faq-item">
-        <div class="faq-q">GitHub가 뭔가요?</div>
-        <div class="faq-a">웹사이트 파일을 저장하는 온라인 창고입니다. 수정 내역도 자동으로 기록되어 언제든 이전 버전으로 돌아갈 수 있습니다.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">Vercel이 뭔가요?</div>
-        <div class="faq-a">GitHub에 저장된 파일을 읽어서 실제 인터넷 주소로 서비스해주는 플랫폼입니다. GitHub에 변경사항이 올라오면 자동으로 웹사이트를 업데이트합니다.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">비용이 드나요?</div>
-        <div class="faq-a">GitHub와 Vercel 모두 개인 무료 플랜으로 ZeroPack을 충분히 사용할 수 있습니다. 트래픽이 매우 많아지면 유료 플랜이 필요할 수 있지만, 초기에는 걱정하지 않아도 됩니다.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">저장소(Import)가 Vercel 목록에 안 보여요.</div>
-        <div class="faq-a">Vercel의 GitHub App 권한 설정에서 해당 저장소를 추가해야 합니다. "Configure GitHub App" 또는 "Adjust Permissions" 링크를 클릭해 저장소를 선택하세요.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">배포 후 내용을 바꾸면 어떻게 되나요?</div>
-        <div class="faq-a">ZeroPack에서 수정 → 저장하면 GitHub에 자동 업로드됩니다. Vercel이 이를 감지하고 자동으로 웹사이트를 업데이트합니다. 별도 작업 없이 1~2분 내에 반영됩니다.</div>
+    <div class="step">
+      <div class="step-header"><div class="step-badge t">5-2</div><div class="step-title">내 사이트 주소 확인 및 접속</div></div>
+      <div class="step-body">
+        <p>배포가 완료되면 내 사이트 주소가 표시됩니다:</p>
+        <div class="url-box"><div class="url-text">https://내가-입력한-이름.vercel.app</div></div>
+        <p style="margin-top:12px;">버튼을 클릭하거나 주소를 복사해 브라우저에 입력하면 내 홈페이지가 열립니다. 🎊</p>
+        <div class="tip"><span>✅</span> 접속이 되면 배포 성공! 이 주소를 저장해두세요.</div>
+        <div class="warn"><span>⚠️</span> 방금 배포 직후 접속 시 404 오류가 뜰 수 있습니다. 1~2분 더 기다렸다가 새로고침하면 정상 표시됩니다.</div>
       </div>
     </div>
   </div>
+</div>
 
+<div class="divider"></div>
+
+<!-- ── STEP 6: Visual Editor ── -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-num rose">6</div>
+    <div>
+      <div class="section-title">내용 수정하기 (Visual Editor)</div>
+      <div class="section-desc">배포된 사이트의 텍스트·이미지·색상을 클릭해서 직접 바꿀 수 있습니다. 코딩 불필요.</div>
+    </div>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-header"><div class="step-badge r">6-1</div><div class="step-title">ZeroPack 대시보드에서 "편집" 클릭</div></div>
+      <div class="step-body">
+        <p>ZeroPack 대시보드로 돌아가서 내 프로젝트의 <strong>"편집"</strong> 또는 <strong>"Edit"</strong> 버튼을 클릭하세요.<br>
+        Visual Editor 화면이 열립니다.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-header"><div class="step-badge r">6-2</div><div class="step-title">텍스트 수정</div></div>
+      <div class="step-body">
+        <p>바꾸고 싶은 <strong>텍스트를 클릭</strong>하면 바로 수정할 수 있습니다.<br>
+        회사명, 소개글, 서비스 설명 등 모든 텍스트를 자유롭게 바꾸세요.</p>
+        <div class="tip"><span>💡</span> 수정한 내용은 저장 버튼을 누르면 자동으로 GitHub에 올라갑니다.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-header"><div class="step-badge r">6-3</div><div class="step-title">이미지 교체</div></div>
+      <div class="step-body">
+        <p>이미지 위에 마우스를 올리면 교체 버튼이 나타납니다.<br>
+        내 사진이나 로고 이미지를 업로드해 바꾸세요.</p>
+        <div class="info"><span>ℹ️</span> 권장 이미지 형식: JPG, PNG, WebP. 용량이 너무 크면 로딩이 느려질 수 있으니 1MB 이하 권장.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-header"><div class="step-badge r">6-4</div><div class="step-title">저장 → 자동 반영</div></div>
+      <div class="step-body">
+        <p><strong>"저장"</strong> 버튼을 클릭하면 변경사항이 GitHub에 자동으로 업로드됩니다.<br>
+        Vercel이 이를 감지하고 <strong>1~3분 내에</strong> 실제 사이트에 자동 반영됩니다.</p>
+        <div class="tip"><span>✅</span> 저장 후 1~3분 기다렸다가 내 사이트를 새로고침하면 바뀐 내용을 확인할 수 있습니다.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── STEP 7: 도메인 연결 (선택) ── -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-num gray">+</div>
+    <div>
+      <div class="section-title">내 도메인 연결하기 (선택사항)</div>
+      <div class="section-desc">mycafe.com 같은 내 도메인을 연결하고 싶다면 이 단계를 진행하세요. 도메인이 없어도 vercel.app 기본 주소로 운영됩니다.</div>
+    </div>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-header"><div class="step-badge">7-1</div><div class="step-title">도메인 구매</div></div>
+      <div class="step-body">
+        <p>가비아, 후이즈, 카페24 등에서 원하는 도메인을 구매하세요.<br>
+        예) mycafe.com (연 1~3만원 수준)</p>
+        <div class="tip"><span>💡</span> .com, .co.kr, .net 중 선호하는 것으로 구매하세요.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-header"><div class="step-badge">7-2</div><div class="step-title">Vercel에서 도메인 추가</div></div>
+      <div class="step-body">
+        <p>Vercel 대시보드 → 내 프로젝트 → <strong>Settings</strong> → <strong>Domains</strong> 탭으로 이동하세요.<br>
+        구매한 도메인을 입력하고 <strong>"Add"</strong>를 클릭하면 DNS 설정 안내가 나타납니다.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-header"><div class="step-badge">7-3</div><div class="step-title">DNS 설정 (도메인 구매처에서)</div></div>
+      <div class="step-body">
+        <p>Vercel이 알려주는 <strong>네임서버 또는 CNAME 값</strong>을 도메인 구매처 관리 페이지에 입력하세요.<br>
+        설정 반영까지 최대 24시간 소요될 수 있습니다. (보통 1~2시간 내 완료)</p>
+        <div class="info"><span>ℹ️</span> 도메인 관리 페이지 → DNS 설정(네임서버 또는 레코드 관리) → Vercel에서 안내한 값 입력</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── 오류 해결 ── -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-num" style="background:#374151;">⚠</div>
+    <div>
+      <div class="section-title">오류 발생 시 해결 방법</div>
+      <div class="section-desc">자주 발생하는 오류와 해결 방법입니다.</div>
+    </div>
+  </div>
+  <div class="error-box">
+    <div class="error-row">
+      <div class="error-code">이미 동일한 이름의 저장소가 존재합니다</div>
+      <div class="error-desc">입력한 프로젝트 이름과 같은 GitHub 저장소가 이미 있습니다.</div>
+      <div class="error-fix"><strong>해결:</strong> 프로젝트 이름을 다른 이름으로 바꾸고 다시 시도하세요. (예: my-site-2)</div>
+    </div>
+    <div class="error-row">
+      <div class="error-code">Vercel에 동일한 이름의 프로젝트가 이미 존재합니다</div>
+      <div class="error-desc">Vercel에 같은 이름 프로젝트가 이미 있습니다.</div>
+      <div class="error-fix"><strong>해결:</strong> 프로젝트 이름을 변경하세요.</div>
+    </div>
+    <div class="error-row">
+      <div class="error-code">Vercel-GitHub 통합이 설치되지 않았습니다</div>
+      <div class="error-desc">3단계 Vercel 연동이 완료되지 않은 상태입니다.</div>
+      <div class="error-fix"><strong>해결:</strong> 3단계로 돌아가서 Integration 설치를 다시 진행하세요. "All Projects"를 선택했는지 확인하세요.</div>
+    </div>
+    <div class="error-row">
+      <div class="error-code">팝업이 차단됨</div>
+      <div class="error-desc">브라우저가 Vercel 연동 팝업창을 차단했습니다.</div>
+      <div class="error-fix"><strong>해결:</strong> 주소창 오른쪽 팝업 차단 아이콘 클릭 → "팝업 허용" 선택 → 버튼 다시 클릭</div>
+    </div>
+    <div class="error-row">
+      <div class="error-code">배포 완료 후 사이트 접속 시 404 오류</div>
+      <div class="error-desc">Vercel 빌드가 아직 진행 중입니다.</div>
+      <div class="error-fix"><strong>해결:</strong> 1~2분 더 기다렸다가 새로고침하세요. 최대 5분 소요될 수 있습니다.</div>
+    </div>
+    <div class="error-row">
+      <div class="error-code">라이선스 키 오류</div>
+      <div class="error-desc">키가 잘못 입력됐거나 이미 사용된 키입니다.</div>
+      <div class="error-fix"><strong>해결:</strong> 크몽 구매 내역에서 키를 다시 복사해 붙여넣기하세요. 공백이 들어가지 않도록 주의.</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Done -->
+<div class="done-section">
+  <div class="done-icon">🎊</div>
+  <div class="done-title">홈페이지 완성!</div>
+  <div class="done-desc">GitHub에 내 코드가 저장됐고, Vercel에서 전 세계에 서비스 중입니다.<br>
+  이제 Visual Editor로 내용을 바꾸면 자동으로 반영됩니다.</div>
+  <div class="done-links">
+    <a class="btn-link" href="https://zpack.app" target="_blank">🏠 ZeroPack 대시보드</a>
+    <a class="btn-link outline" href="https://vercel.com/dashboard" target="_blank">▲ Vercel 대시보드</a>
+    <a class="btn-link outline" href="https://github.com" target="_blank">🐙 GitHub</a>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- FAQ -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-num gray">?</div>
+    <div>
+      <div class="section-title">자주 묻는 질문</div>
+      <div class="section-desc">막히는 부분이 있다면 아래를 확인하세요.</div>
+    </div>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q">GitHub, Vercel이 뭔가요? 왜 이것들을 써야 하나요?</div>
+      <div class="faq-a">GitHub는 내 홈페이지 파일을 저장하는 공간(창고), Vercel은 그 파일을 실제 인터넷 주소로 올려주는 서비스입니다. 둘 다 전 세계 수백만 명이 쓰는 무료 서비스이고, 이것들을 이용하기 때문에 호스팅 비용이 0원입니다. ZeroPack은 이 복잡한 연결을 자동으로 해줍니다.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">GitHub, Vercel이 나중에 유료로 바뀌면 어떻게 되나요?</div>
+      <div class="faq-a">현재 무료 플랜으로 개인 홈페이지 운영에는 충분합니다. 혹시 유료 전환이 되더라도 내 코드는 내 GitHub에 있으므로 다른 무료 서비스(Netlify, Cloudflare Pages 등)로 이전할 수 있습니다.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">수정하고 저장했는데 사이트에 반영이 안 돼요.</div>
+      <div class="faq-a">저장 후 Vercel이 자동으로 빌드·배포합니다. 보통 1~3분 소요됩니다. 5분이 지나도 반영이 안 되면 Vercel 대시보드에서 빌드 로그를 확인해보세요.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">ZeroPack이 사라지면 내 사이트도 없어지나요?</div>
+      <div class="faq-a">아닙니다. 사이트는 내 GitHub + 내 Vercel 계정에서 운영됩니다. ZeroPack은 배포를 도와준 도구일 뿐이고, 배포가 완료된 사이트는 ZeroPack과 완전히 독립적으로 운영됩니다.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">도메인 없이도 사이트를 운영할 수 있나요?</div>
+      <div class="faq-a">네. Vercel이 자동으로 "프로젝트이름.vercel.app" 주소를 무료로 제공합니다. 이 주소만으로도 충분히 운영 가능합니다. 나중에 원하면 내 도메인을 구매해 연결할 수 있습니다.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">트래픽이 갑자기 많이 늘어나도 괜찮나요?</div>
+      <div class="faq-a">Vercel 무료 플랜은 월 100GB 대역폭이 제공됩니다. 소상공인·개인 홈페이지 수준에서는 충분합니다. 방문자가 하루 수만 명 이상 되는 대규모 서비스가 되면 그때 Vercel 유료 플랜($20/월)을 고려하시면 됩니다.</div>
+    </div>
+  </div>
   <div style="height:60px;"></div>
 </div>
 
-<footer>ZeroPack Setup Guide · zpack.app · 문의: 대시보드 내 고객지원</footer>
+</div><!-- /container -->
+
+<footer>ZeroPack 시작 가이드 · zpack.app · 문의: 크몽 메시지 또는 ZeroPack 고객지원</footer>
 
 </body>
 </html>
