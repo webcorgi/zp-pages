@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZeroPack 멀티채널 마케팅 콘텐츠</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0A0A0F; color: #e8e8f0; min-height: 100vh; }
+
+  /* Header */
+  .header { padding: 40px 24px 0; max-width: 900px; margin: 0 auto; }
+  .back-link { display: inline-flex; align-items: center; gap: 6px; color: #6C47FF; text-decoration: none; font-size: 13px; margin-bottom: 24px; }
+  .back-link:hover { color: #9b7dff; }
+  .header h1 { font-size: 26px; font-weight: 800; margin-bottom: 8px; }
+  .header p { color: #666677; font-size: 13px; margin-bottom: 32px; }
+
+  /* Tabs */
+  .tabs-wrapper { max-width: 900px; margin: 0 auto; padding: 0 24px 60px; }
+  .tab-nav { display: flex; gap: 4px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; scrollbar-color: #26262e transparent; }
+  .tab-nav::-webkit-scrollbar { height: 4px; }
+  .tab-nav::-webkit-scrollbar-track { background: transparent; }
+  .tab-nav::-webkit-scrollbar-thumb { background: #26262e; border-radius: 4px; }
+  .tab-btn { flex-shrink: 0; padding: 8px 16px; border-radius: 8px; border: 1px solid #26262e; background: #141418; color: #888899; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+  .tab-btn:hover { border-color: #6C47FF; color: #e8e8f0; }
+  .tab-btn.active { background: #6C47FF; border-color: #6C47FF; color: #fff; }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* Cards */
+  .card { background: #141418; border: 1px solid #26262e; border-radius: 14px; padding: 22px 24px; margin-bottom: 16px; }
+  .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+  .card-label { font-size: 11px; font-weight: 700; color: #6C47FF; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .card-title { font-size: 14px; font-weight: 700; color: #c8c8d8; }
+  .card-meta { font-size: 11px; color: #555566; margin-top: 3px; }
+
+  .copy-btn { flex-shrink: 0; padding: 6px 12px; background: transparent; border: 1px solid #26262e; border-radius: 7px; color: #888899; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .copy-btn:hover { border-color: #6C47FF; color: #6C47FF; }
+  .copy-btn.copied { border-color: #22c55e; color: #22c55e; }
+
+  .content-box { background: #0e0e14; border: 1px solid #1e1e28; border-radius: 10px; padding: 16px; font-size: 13px; line-height: 1.7; color: #c8c8d8; white-space: pre-wrap; word-break: break-word; }
+
+  .section-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; color: #e8e8f0; padding-bottom: 10px; border-bottom: 1px solid #1e1e28; }
+  .section-note { background: #141418; border: 1px solid #26262e; border-left: 3px solid #6C47FF; border-radius: 8px; padding: 14px 16px; font-size: 12px; color: #888899; line-height: 1.6; margin-bottom: 20px; }
+  .section-note strong { color: #c8c8d8; }
+
+  /* Tweet grid */
+  .tweet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .tweet-grid { grid-template-columns: 1fr; } }
+
+  .lang-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; margin-bottom: 8px; }
+  .lang-ko { background: #1a1a3e; color: #7c6aff; border: 1px solid #3a3a7e; }
+  .lang-en { background: #1a2e1a; color: #4ade80; border: 1px solid #2e5e2e; }
+
+  /* Directory table */
+  .dir-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .dir-table th { text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 700; color: #666677; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid #1e1e28; }
+  .dir-table td { padding: 12px 14px; border-bottom: 1px solid #1a1a22; color: #c8c8d8; vertical-align: top; }
+  .dir-table tr:last-child td { border-bottom: none; }
+  .dir-table tr:hover td { background: #18181e; }
+  .dir-link { color: #6C47FF; text-decoration: none; font-size: 12px; }
+  .dir-link:hover { color: #9b7dff; text-decoration: underline; }
+  .tag-chip { display: inline-block; padding: 2px 7px; background: #1e1e2e; border: 1px solid #2e2e4e; border-radius: 4px; font-size: 10px; color: #888899; margin: 2px 2px 0 0; }
+
+  /* Day badge for tweets */
+  .day-badge { display: inline-block; padding: 2px 8px; background: #1e1e2e; border: 1px solid #2e2e4e; border-radius: 4px; font-size: 10px; font-weight: 700; color: #888899; margin-bottom: 10px; }
+
+  /* Disquiet tags */
+  .dq-tag { display: inline-block; padding: 3px 10px; background: #1a1a3e; border: 1px solid #3a3a7e; border-radius: 20px; font-size: 11px; color: #7c6aff; margin: 3px 3px 0 0; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a class="back-link" href="index.html">← ZeroPack Pages</a>
+  <h1>멀티채널 마케팅 콘텐츠</h1>
+  <p>Twitter/X · Product Hunt · Indie Hackers · SaaS 디렉토리 · 디스콰이엇 채널별 등록 자료</p>
+</div>
+
+<div class="tabs-wrapper">
+  <div class="tab-nav">
+    <button class="tab-btn active" data-tab="twitter">Twitter/X 캘린더</button>
+    <button class="tab-btn" data-tab="ph">Product Hunt Upcoming</button>
+    <button class="tab-btn" data-tab="ih">Indie Hackers</button>
+    <button class="tab-btn" data-tab="dirs">SaaS 디렉토리</button>
+    <button class="tab-btn" data-tab="disquiet">디스콰이엇</button>
+  </div>
+
+  <!-- ===== TAB 1: Twitter/X ===== -->
+  <div class="tab-panel active" id="tab-twitter">
+    <div class="section-note">
+      <strong>Buffer 예약 방법:</strong> buffer.com 접속 → New Post → Twitter 계정 연결 → 아래 트윗 복사 붙여넣기 → 날짜/시간 예약 설정 → Add to Queue. 한국어는 오전 7-9시, 영어는 미국 동부 오전 9-11시(한국 밤 11시-오전 1시)에 예약 추천.
+    </div>
+
+    <div class="section-title">Week 1 (Day 1–7) — 한국어 트윗</div>
+    <div class="tweet-grid">
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 1 · 월</div>
+            <div class="lang-badge lang-ko">한국어</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">홈페이지 하나 만들려고 개발자 외주 알아봤더니 견적이 300만원 나왔습니다.
+
+저처럼 억울한 소상공인분들을 위해 ZeroPack 만들었어요.
+
+✅ 1회 결제 20만원
+✅ 이후 구독료 0원
+✅ 코드 완전 내 소유
+
+👉 zpack.app #소상공인 #홈페이지</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 2 · 화</div>
+            <div class="lang-badge lang-ko">한국어</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">아임웹 쓰시나요? 매달 나가는 돈 계산해보셨어요?
+
+월 3만원 × 12개월 = 36만원/년
+월 10만원 × 12개월 = 120만원/년
+
+ZeroPack은 딱 한 번만 냅니다.
+그리고 끝. 영원히 무료.
+
+demo: temp01.zpack.app #웹빌더 #소기업</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 3 · 수</div>
+            <div class="lang-badge lang-ko">한국어</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">학원 원장님, 병원 원장님들께 드리는 말씀.
+
+"홈페이지 있으면 좋겠는데 유지비가 걱정돼요"
+
+ZeroPack 쓰시면 GitHub + Vercel 무료 호스팅으로 서버비 0원입니다. 공지사항, FAQ, 문의폼, 포트폴리오 갤러리까지 다 됩니다.
+
+#학원마케팅 #병원홈페이지</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 4 · 목</div>
+            <div class="lang-badge lang-ko">한국어</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">ZeroPack으로 만들 수 있는 것들:
+
+📌 공지사항 게시판
+❓ FAQ 페이지
+📸 포트폴리오 갤러리
+📧 문의 폼
+💼 채용 공고
+📝 블로그
+
+이 모든 게 20만원 1회 결제에 포함.
+추가 비용 없음.
+
+zpack.app</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 5 · 금</div>
+            <div class="lang-badge lang-ko">한국어</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">"홈페이지는 있어야 하는데 돈은 없고, 기술은 모르고"
+
+이 말이 공감되신다면 ZeroPack이 딱입니다.
+
+코딩 몰라도 됩니다.
+Visual Editor로 직접 편집하세요.
+관리자 로그인해서 게시글 올리세요.
+
+베타 특가 ₩200,000 → zpack.app</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 6 · 토</div>
+            <div class="lang-badge lang-ko">한국어</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">주말에 데모 한번 구경해 보세요.
+
+temp01.zpack.app
+
+공지사항, 블로그, FAQ, 채용공고, 포트폴리오, 문의폼이 다 들어있어요. 관리자 로그인해서 직접 글도 써볼 수 있습니다.
+
+이게 20만원짜리예요. #ZeroPack</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 7 · 일</div>
+            <div class="lang-badge lang-ko">한국어</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">소상공인이 홈페이지 하나 갖기 왜 이렇게 어렵냐고요.
+
+외주 300만원, 월 구독 10만원, 유지보수 별도...
+
+ZeroPack은 한 번 사면 끝입니다.
+코드도 내 것, 도메인도 내 것.
+서버 비용도 0원.
+
+베타 기간 한정 ₩200,000
+zpack.app</div>
+      </div>
+
+    </div>
+
+    <div class="section-title" style="margin-top:32px;">Week 1 (Day 1–7) — English Tweets</div>
+    <div class="tweet-grid">
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 1 · Mon</div>
+            <div class="lang-badge lang-en">English</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">I got a quote for $2,500 to build a simple business website.
+
+So I built ZeroPack instead.
+
+One-time payment of $150. Zero subscription. Zero hosting fees. You own the code.
+
+Powered by GitHub + Vercel free tier.
+
+#buildinpublic #indiehacker #saas</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 2 · Tue</div>
+            <div class="lang-badge lang-en">English</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">Most website builders charge you every single month.
+
+ZeroPack charges you once. That's it.
+
+✅ Notice board
+✅ FAQ page
+✅ Portfolio gallery
+✅ Contact form
+✅ Blog
+✅ Admin login
+
+All included. No recurring fees.
+
+👉 zpack.app
+
+#saas #nocode #smallbusiness</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 3 · Wed</div>
+            <div class="lang-badge lang-en">English</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">Building in public: ZeroPack 🧱
+
+What I shipped this week:
+- Visual Editor (no-code content editing)
+- Admin dashboard with login
+- Portfolio gallery module
+- Multi-board system (blog/FAQ/jobs/notice)
+
+Target: small businesses who can't afford $2k+ web dev fees.
+
+#buildinpublic #indiehacker</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 4 · Thu</div>
+            <div class="lang-badge lang-en">English</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">The real cost of "free" website builders:
+
+Wix: $17–$159/mo
+Squarespace: $16–$49/mo
+Webflow: $14–$212/mo
+
+ZeroPack: $150 once → $0/mo forever.
+
+Your site runs on GitHub + Vercel. You own everything.
+
+Check the demo: temp01.zpack.app
+
+#saas #webdev #buildinpublic</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 5 · Fri</div>
+            <div class="lang-badge lang-en">English</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">If you run a clinic, studio, academy or small shop — you need a website, not a $2,000 bill.
+
+ZeroPack gives you a full business site:
+- Auto-deployed to Vercel
+- GitHub repo you own
+- Visual editor included
+
+One-time fee. Yours forever.
+
+zpack.app #smallbiz #indiehacker</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 6 · Sat</div>
+            <div class="lang-badge lang-en">English</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">Weekend shipping log 🛠️
+
+ZeroPack beta is live. Here's what the demo site includes:
+
+→ Board system (notice/blog/FAQ/jobs)
+→ Portfolio gallery
+→ Contact form with email routing
+→ Admin panel
+→ Visual Editor
+
+See it live: temp01.zpack.app
+
+#buildinpublic #saas</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 7 · Sun</div>
+            <div class="lang-badge lang-en">English</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">Why I built ZeroPack:
+
+Small business owners in Korea were paying $150–300/mo for basic websites. Or $3,000+ for custom dev.
+
+I wanted to fix that.
+
+One-time payment → GitHub repo → Vercel auto-deploy → Done.
+
+No lock-in. No subscriptions. Your code, your site.
+
+#indiehacker #buildinpublic #saas</div>
+      </div>
+
+    </div>
+
+    <div class="section-title" style="margin-top:32px;">Week 2 (Day 8–14) — 한국어 트윗</div>
+    <div class="tweet-grid">
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 8 · 월</div>
+            <div class="lang-badge lang-ko">한국어</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">프리랜서 분들, 포트폴리오 사이트 어디에 올리세요?
+
+비핸스? 노션? 인스타?
+
+ZeroPack으로 내 도메인에 포트폴리오 갤러리 + 블로그 + 문의폼까지 갖춘 사이트 만드세요.
+
+한 번 결제, 평생 내 것.
+zpack.app #프리랜서 #포트폴리오</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 9 · 화</div>
+            <div class="lang-badge lang-ko">한국어</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">ZeroPack 베타 특가 마감 임박합니다.
+
+현재: ₩200,000
+정가: ₩300,000
+
+베타 기간 내에 구매하시면 ₩100,000 절약하고 코드 소유권까지 드립니다.
+
+망설이시는 분들, 이때 아니면 없어요.
+👉 zpack.app</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 10 · 수</div>
+            <div class="lang-badge lang-ko">한국어</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">"GitHub이 뭔지도 모르는데요?"
+
+괜찮습니다.
+
+ZeroPack은 GitHub + Vercel 세팅을 자동으로 해드립니다. 클릭 몇 번이면 홈페이지가 배포됩니다.
+
+이후엔 관리자 로그인해서 글만 쓰시면 돼요.
+
+#IT초보 #홈페이지제작 zpack.app</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 11 · 목</div>
+            <div class="lang-badge lang-ko">한국어</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">오늘 커피 한 잔 값으로 뭘 할 수 있을까요.
+
+ZeroPack 20만원이면:
+☕ 아메리카노 약 57잔
+🌐 홈페이지 평생 운영
+
+당신의 선택은? 😄
+
+농담이지만 진심입니다.
+한 번 결제로 구독료 없이 영원히.
+zpack.app</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 12 · 금</div>
+            <div class="lang-badge lang-ko">한국어</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">소기업 대표님들이 홈페이지에 원하는 것:
+
+1순위: 비용 적을 것
+2순위: 관리 쉬울 것
+3순위: 디자인 괜찮을 것
+
+ZeroPack은 셋 다 됩니다.
+
+비용: 20만원 1회
+관리: 관리자 페이지 + Visual Editor
+디자인: 깔끔한 비즈니스 템플릿
+
+zpack.app</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 13 · 토</div>
+            <div class="lang-badge lang-ko">한국어</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">채용 공고도 홈페이지에서 관리하세요.
+
+ZeroPack 채용 게시판:
+- 관리자가 직접 공고 작성
+- 지원자 문의 폼 연동
+- 별도 채용 플랫폼 비용 없음
+
+작은 회사일수록 직접 운영하는 채용 페이지가 신뢰감을 줍니다.
+
+zpack.app #채용 #소기업</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 14 · 일</div>
+            <div class="lang-badge lang-ko">한국어</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">2주치 트윗을 썼네요. 😅
+
+ZeroPack을 만들면서 가장 많이 들은 말:
+"이런 거 진짜 필요했어요"
+
+소상공인, 소기업, 프리랜서 여러분.
+홈페이지 비용 때문에 포기하지 마세요.
+
+20만원으로 시작하세요. 구독료는 없습니다.
+👉 zpack.app</div>
+      </div>
+
+    </div>
+
+    <div class="section-title" style="margin-top:32px;">Week 2 (Day 8–14) — English Tweets</div>
+    <div class="tweet-grid">
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 8 · Mon</div>
+            <div class="lang-badge lang-en">English</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">Freelancers: stop putting your portfolio on Notion or Behance.
+
+Own your presence.
+
+ZeroPack gives you a full portfolio site with:
+→ Gallery module
+→ Blog
+→ Contact form
+→ Custom domain
+
+One-time fee. Your GitHub repo. Forever.
+
+zpack.app #freelance #buildinpublic</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 9 · Tue</div>
+            <div class="lang-badge lang-en">English</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">Beta pricing ends soon.
+
+ZeroPack is $150 now → $225 at launch.
+
+What you get:
+- Full business website (auto-deployed)
+- GitHub repo ownership
+- Visual editor + admin panel
+- Zero monthly fees, ever
+
+Last chance to lock in beta price.
+
+zpack.app #saas #indiehacker</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 10 · Wed</div>
+            <div class="lang-badge lang-en">English</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">"I don't know what GitHub is."
+
+That's fine.
+
+ZeroPack walks you through GitHub + Vercel setup automatically. A few clicks and your site is live.
+
+After that, just log into the admin panel and write posts.
+
+No coding required.
+
+zpack.app #nocode #saas #buildinpublic</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 11 · Thu</div>
+            <div class="lang-badge lang-en">English</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">Unpopular opinion: most small businesses don't need a $200/mo website.
+
+They need:
+- A clean professional site
+- Easy content management
+- Zero recurring costs
+
+ZeroPack solves all three. One-time payment. GitHub-hosted. Forever yours.
+
+#buildinpublic #indiehacker #saas</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 12 · Fri</div>
+            <div class="lang-badge lang-en">English</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">What small business owners actually want from a website:
+
+1. Low cost ✅
+2. Easy to manage ✅
+3. Decent design ✅
+
+ZeroPack checks all three.
+
+$150 one-time → admin panel + visual editor + clean template.
+
+No lock-in. No monthly bill.
+
+zpack.app #smallbiz #saas</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 13 · Sat</div>
+            <div class="lang-badge lang-en">English</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">Hiring pages shouldn't cost extra.
+
+ZeroPack includes a job board module:
+→ Post job listings from admin panel
+→ Applicants submit via contact form
+→ No third-party job board fees
+
+Small companies need a credible hiring page too.
+
+zpack.app #hiring #buildinpublic #saas</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="day-badge">Day 14 · Sun</div>
+            <div class="lang-badge lang-en">English</div>
+          </div>
+          <button class="copy-btn" onclick="copyCard(this)">복사</button>
+        </div>
+        <div class="content-box">2 weeks of building in public. Here's where ZeroPack stands:
+
+✅ Beta live at zpack.app
+✅ Demo: temp01.zpack.app
+✅ GitHub + Vercel auto-deploy working
+✅ Visual Editor shipped
+✅ Admin panel + multi-board system
+
+One-time $150. Zero subscriptions. Full code ownership.
+
+Thanks for following along 🙏
+
+#buildinpublic #indiehacker #saas</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== TAB 2: Product Hunt Upcoming ===== -->
+  <div class="tab-panel" id="tab-ph">
+    <div class="section-note">
+      <strong>등록 URL:</strong> <a href="https://www.producthunt.com/upcoming/new" target="_blank" class="dir-link">producthunt.com/upcoming/new</a> — 이메일 수집용 Upcoming 페이지. 실제 런칭 전 "Coming soon" 상태로 등록해 관심 유저 이메일을 미리 모읍니다.
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-label">Product Name</div>
+          <div class="card-title">제품명</div>
+        </div>
+        <button class="copy-btn" onclick="copyCard(this)">복사</button>
+      </div>
+      <div class="content-box">ZeroPack</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-label">Tagline</div>
+          <div class="card-title">태그라인 (60자 이내)</div>
+        </div>
+        <button class="copy-btn" onclick="copyCard(this)">복사</button>
+      </div>
+      <div class="content-box">Launch a full business website once — own it forever, pay nothing monthly.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-label">Description</div>
+          <div class="card-title">제품 설명 (400자 이내)</div>
+        </div>
+        <button class="copy-btn" onclick="copyCard(this)">복사</button>
+      </div>
+      <div class="content-box">ZeroPack is a one-time-payment SaaS that deploys a complete business website to GitHub + Vercel — with zero monthly fees, forever.
+
+Perfect for small businesses, clinics, studios, and freelancers who need a professional site without the $200/mo price tag.
+
+Includes: notice board, FAQ, blog, job listings, portfolio gallery, contact form, admin dashboard, and Visual Editor.
+
+One payment. Your GitHub repo. Your domain. Your code — permanently.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-label">Upcoming Teaser</div>
+          <div class="card-title">이메일 수집용 티저 문구</div>
+          <div class="card-meta">Upcoming 페이지 "What's coming" 섹션에 입력</div>
+        </div>
+        <button class="copy-btn" onclick="copyCard(this)">복사</button>
+      </div>
+      <div class="content-box">We're launching ZeroPack on Product Hunt soon.
+
+Early subscribers get:
+🎁 Beta pricing locked in ($150 vs $225 at launch)
+🎁 Early access before public launch
+🎁 Direct feedback channel with the maker
+
+Drop your email to be first in line. No spam — just one notification when we go live.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-label">Topics / Categories</div>
+          <div class="card-title">추천 카테고리 태그</div>
+        </div>
+        <button class="copy-btn" onclick="copyCard(this)">복사</button>
+      </div>
+      <div class="content-box">Website Builder · SaaS · No-Code · Small Business Tools · Developer Tools</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-label">Maker Comment</div>
+          <div class="card-title">런칭 당일 Maker Comment 초안</div>
+        </div>
+        <button class="copy-btn" onclick="copyCard(this)">복사</button>
+      </div>
+      <div class="content-box">Hey Product Hunt! 👋
+
+I built ZeroPack after watching small business owners in Korea pay $150–300/month for basic websites — or $3,000+ for custom development.
+
+The idea is simple: pay once, own everything. Your site deploys automatically to GitHub + Vercel (both free), so your hosting cost is literally $0/month after purchase.
+
+What's included:
+- Multi-board system (notice/blog/FAQ/jobs)
+- Portfolio gallery
+- Contact form
+- Admin dashboard
+- Visual Editor (no-code editing)
+
+I'd love your feedback — especially from small business owners and freelancers. What features would make this perfect for you?
+
+Check the live demo: temp01.zpack.app</div>
+    </div>
+  </div>
+
+  <!-- ===== TAB 3: Indie Hackers ===== -->
+  <div class="tab-panel" id="tab-ih">
+    <div class="section-note">
+      <strong>등록 URL:</strong> <a href="https://www.indiehackers.com/products" target="_blank" class="dir-link">indiehackers.com/products</a> → "Add a product" 클릭. 아래 내용을 복사해 각 필드에 붙여넣으세요.
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-label">Product Page — About</div>
+          <div class="card-title">제품 소개글</div>
+        </div>
+        <button class="copy-btn" onclick="copyCard(this)">복사</button>
+      </div>
+      <div class="content-box">ZeroPack is a one-time-payment SaaS that gives small businesses a complete, professionally designed website — deployed automatically to GitHub + Vercel with zero monthly hosting fees.
+
+**The problem it solves:**
+Small business owners (clinics, studios, academies, freelancers) face an impossible choice: pay $3,000+ for custom development, or get locked into $100–300/month website builder subscriptions. Neither option makes sense for a 5-person business.
+
+**The solution:**
+ZeroPack generates a complete business website and deploys it directly to the customer's GitHub account + Vercel. Since both platforms offer generous free tiers, hosting costs nothing after the initial purchase.
+
+**What's included:**
+- Notice board, Blog, FAQ, Job listings (all manageable from admin panel)
+- Portfolio gallery with image upload
+- Contact form
+- Admin dashboard with login
+- Visual Editor for no-code content editing
+
+**Pricing:**
+₩200,000 (~$150 USD) one-time — beta pricing. Regular price will be ₩300,000 (~$225).
+
+**Live demo:** temp01.zpack.app</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-label">How I Built It</div>
+          <div class="card-title">"How I built it" 스토리</div>
+          <div class="card-meta">IH Milestone 또는 Post로 발행 가능</div>
+        </div>
+        <button class="copy-btn" onclick="copyCard(this)">복사</button>
+      </div>
+      <div class="content-box">## How I Built ZeroPack: A One-Time-Payment Website Builder for Small Businesses
+
+### The frustration that started it all
+
+I kept seeing the same pattern: a local clinic, a language academy, a small design studio — all needing a basic business website, all getting quoted $2,500–5,000 by developers, or pushed toward $100–300/month SaaS subscriptions they'd need forever.
+
+The math never made sense. A 5-person business paying $150/month for a website is spending $1,800/year on something that should be a one-time cost.
+
+### The insight
+
+GitHub + Vercel offer genuinely free hosting for static sites and lightweight apps. If I could build a product that deploys directly into a customer's GitHub repo and Vercel account, the hosting cost would be zero — permanently.
+
+### Tech stack
+
+- **Frontend:** Next.js (static generation for speed + free Vercel hosting)
+- **Backend:** Lightweight API routes for admin functionality
+- **Database:** None for static content; simple JSON/markdown for CMS content
+- **Deployment:** Vercel auto-deploy from GitHub push
+- **Admin panel:** Custom-built with Visual Editor
+
+### The business model
+
+One-time payment ($150 beta / $225 regular). No subscriptions, no upsells, no hidden fees. The customer gets the full GitHub repo — they own the code completely.
+
+Revenue model is simple: charge once, deliver value forever. The bet is that word-of-mouth from happy small business owners compounds over time.
+
+### What's live today
+
+- Multi-board system (notice, blog, FAQ, job listings)
+- Portfolio gallery
+- Contact form with routing
+- Admin dashboard + Visual Editor
+- Automated GitHub + Vercel deployment
+
+### Biggest challenge
+
+Convincing small business owners that "you own the code" is actually a feature, not a scary technical detail. Working on better onboarding copy for this.
+
+### Revenue so far
+
+Early beta stage. First customers onboarding now.
+
+### What's next
+
+- Polished onboarding flow
+- More templates
+- Product Hunt launch
+- English market expansion</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-label">Revenue Model</div>
+          <div class="card-title">수익 모델 요약</div>
+        </div>
+        <button class="copy-btn" onclick="copyCard(this)">복사</button>
+      </div>
+      <div class="content-box">One-time payment: ₩200,000 (~$150 USD) beta / ₩300,000 (~$225) regular price.
+
+No subscriptions. No per-seat pricing. No hosting upsells.
+
+The customer pays once and owns the GitHub repo + deployed site forever. My COGS per customer is essentially $0 after initial setup automation, making margins very high at scale.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-label">Tech Stack</div>
+          <div class="card-title">기술 스택</div>
+        </div>
+        <button class="copy-btn" onclick="copyCard(this)">복사</button>
+      </div>
+      <div class="content-box">Next.js · GitHub API · Vercel · Node.js · Custom Visual Editor · Admin Dashboard</div>
+    </div>
+  </div>
+
+  <!-- ===== TAB 4: SaaS 디렉토리 ===== -->
+  <div class="tab-panel" id="tab-dirs">
+    <div class="section-note">
+      <strong>등록 전략:</strong> 아래 사이트들에 동일한 설명을 복사해 등록하세요. 각 사이트는 SEO 백링크 + 유입 채널이 됩니다. 등록 후 24–72시간 내에 승인되는 경우가 많습니다.
+    </div>
+
+    <div class="card" style="overflow-x:auto;">
+      <div class="card-label" style="margin-bottom:12px;">등록 사이트 목록 (8곳)</div>
+      <table class="dir-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>사이트</th>
+            <th>등록 URL</th>
+            <th>특징</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color:#666677;">1</td>
+            <td style="font-weight:700;">AlternativeTo</td>
+            <td><a class="dir-link" href="https://alternativeto.net/add/" target="_blank">alternativeto.net/add/</a></td>
+            <td style="color:#888899; font-size:12px;">Wix/Squarespace 대안으로 노출. 트래픽 많음</td>
+          </tr>
+          <tr>
+            <td style="color:#666677;">2</td>
+            <td style="font-weight:700;">BetaList</td>
+            <td><a class="dir-link" href="https://betalist.com/submit" target="_blank">betalist.com/submit</a></td>
+            <td style="color:#888899; font-size:12px;">얼리어답터 커뮤니티. 베타 제품 특화</td>
+          </tr>
+          <tr>
+            <td style="color:#666677;">3</td>
+            <td style="font-weight:700;">SaaSHub</td>
+            <td><a class="dir-link" href="https://www.saashub.com/add-product" target="_blank">saashub.com/add-product</a></td>
+            <td style="color:#888899; font-size:12px;">SaaS 전문 디렉토리. SEO 강함</td>
+          </tr>
+          <tr>
+            <td style="color:#666677;">4</td>
+            <td style="font-weight:700;">G2</td>
+            <td><a class="dir-link" href="https://sell.g2.com/free-listing" target="_blank">sell.g2.com/free-listing</a></td>
+            <td style="color:#888899; font-size:12px;">B2B SaaS 리뷰 플랫폼. 신뢰도 높음</td>
+          </tr>
+          <tr>
+            <td style="color:#666677;">5</td>
+            <td style="font-weight:700;">Capterra</td>
+            <td><a class="dir-link" href="https://vendors.capterra.com/listing/application" target="_blank">vendors.capterra.com/listing/application</a></td>
+            <td style="color:#888899; font-size:12px;">소프트웨어 리뷰. 중소기업 의사결정자 유입</td>
+          </tr>
+          <tr>
+            <td style="color:#666677;">6</td>
+            <td style="font-weight:700;">Product Hunt</td>
+            <td><a class="dir-link" href="https://www.producthunt.com/posts/new" target="_blank">producthunt.com/posts/new</a></td>
+            <td style="color:#888899; font-size:12px;">런칭 당일 집중 트래픽</td>
+          </tr>
+          <tr>
+            <td style="color:#666677;">7</td>
+            <td style="font-weight:700;">There's An AI For That</td>
+            <td><a class="dir-link" href="https://theresanaiforthat.com/submit/" target="_blank">theresanaiforthat.com/submit/</a></td>
+            <td style="color:#888899; font-size:12px;">AI 카테고리 노출 가능. 트래픽 급증 중</td>
+          </tr>
+          <tr>
+            <td style="color:#666677;">8</td>
+            <td style="font-weight:700;">Startupbase</td>
+            <td><a class="dir-link" href="https://startupbase.io/submit" target="_blank">startupbase.io/submit</a></td>
+            <td style="color:#888899; font-size:12px;">스타트업 디렉토리. 무료 등록</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-label">Short Description</div>
+          <div class="card-title">공통 제품 설명 — 200자 이내 (영어)</div>
+          <div class="card-meta">AlternativeTo, SaaSHub, BetaList 등 공통 사용</div>
+        </div>
+        <button class="copy-btn" onclick="copyCard(this)">복사</button>
+      </div>
+      <div class="content-box">ZeroPack is a one-time-payment website builder for small businesses. Deploy a full site (boards, gallery, contact form, admin panel, visual editor) to GitHub + Vercel with zero monthly fees — forever. You own the code.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-label">Long Description</div>
+          <div class="card-title">공통 제품 설명 — 500자 이내 (영어)</div>
+          <div class="card-meta">G2, Capterra 등 상세 설명 필드용</div>
+        </div>
+        <button class="copy-btn" onclick="copyCard(this)">복사</button>
+      </div>
+      <div class="content-box">ZeroPack is a SaaS product that deploys a complete business website to your own GitHub repository and Vercel account — with zero monthly hosting fees, permanently.
+
+Designed for small businesses, clinics, studios, academies, and freelancers who need a professional web presence without $100–300/month subscriptions or $3,000+ development quotes.
+
+Features: notice board, blog, FAQ, job listings, portfolio gallery, contact form, admin dashboard, and Visual Editor (no-code editing). One-time payment. Full code ownership. No lock-in.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-label">Categories</div>
+          <div class="card-title">카테고리 추천</div>
+        </div>
+        <button class="copy-btn" onclick="copyCard(this)">복사</button>
+      </div>
+      <div class="content-box">Website Builder · CMS · Small Business Software · No-Code Tools · Web Publishing · Business Website</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-label">Tags</div>
+          <div class="card-title">태그 추천</div>
+        </div>
+        <button class="copy-btn" onclick="copyCard(this)">복사</button>
+      </div>
+      <div class="content-box">website-builder, no-code, small-business, one-time-payment, github, vercel, cms, portfolio, saas, no-subscription, static-site, business-website, admin-dashboard, visual-editor</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-label">Alternatives</div>
+          <div class="card-title">AlternativeTo 등록 시 — 경쟁 제품 태그용</div>
+          <div class="card-meta">AlternativeTo에서 "alternative to" 필드에 입력</div>
+        </div>
+        <button class="copy-btn" onclick="copyCard(this)">복사</button>
+      </div>
+      <div class="content-box">Wix · Squarespace · Webflow · WordPress · Ghost · Weebly · GoDaddy Website Builder · Cafe24</div>
+    </div>
+  </div>
+
+  <!-- ===== TAB 5: 디스콰이엇 ===== -->
+  <div class="tab-panel" id="tab-disquiet">
+    <div class="section-note">
+      <strong>등록 URL:</strong> <a href="https://disquiet.io/@me/products/new" target="_blank" class="dir-link">disquiet.io/@me/products/new</a> — 로그인 후 제품 등록. 한국 IT/스타트업 커뮤니티에서 트래픽이 높습니다. 등록 후 "메이커 이야기" 게시글도 함께 올리면 효과적입니다.
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-label">제품명</div>
+          <div class="card-title">서비스명</div>
+        </div>
+        <button class="copy-btn" onclick="copyCard(this)">복사</button>
+      </div>
+      <div class="content-box">ZeroPack</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-label">웹사이트</div>
+          <div class="card-title">URL</div>
+        </div>
+        <button class="copy-btn" onclick="copyCard(this)">복사</button>
+      </div>
+      <div class="content-box">https://zpack.app</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-label">한 줄 소개</div>
+          <div class="card-title">태그라인 (60자 이내)</div>
+        </div>
+        <button class="copy-btn" onclick="copyCard(this)">복사</button>
+      </div>
+      <div class="content-box">소기업·소상공인용 비즈니스 홈페이지 자동 배포 — 1회 결제, 구독료 0원, 코드 완전 소유.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-label">상세 소개</div>
+          <div class="card-title">제품 상세 설명</div>
+        </div>
+        <button class="copy-btn" onclick="copyCard(this)">복사</button>
+      </div>
+      <div class="content-box">ZeroPack은 소기업·소상공인·프리랜서를 위한 비즈니스 홈페이지 자동 배포 SaaS입니다.
+
+**왜 만들었나요?**
+
+소상공인이 홈페이지 하나 만들려면 두 가지 선택지가 있습니다.
+• 개발자 외주: 300~500만원
+• 웹빌더 구독: 월 3~10만원 (연 36~120만원)
+
+둘 다 비쌉니다. 특히 5인 이하 소기업에는 부담이 큽니다.
+
+ZeroPack은 다릅니다.
+
+**어떻게 작동하나요?**
+
+구매하면 고객의 GitHub 계정에 완성된 홈페이지 코드가 자동으로 올라가고, Vercel을 통해 즉시 배포됩니다. GitHub과 Vercel 모두 무료 플랜을 제공하기 때문에 이후 호스팅 비용은 0원입니다. 영원히.
+
+**포함 기능**
+
+📌 게시판 4종 (공지사항 · 블로그 · FAQ · 채용공고)
+📸 포트폴리오 갤러리
+📧 문의 폼
+🔐 관리자 로그인 + 대시보드
+✏️ Visual Editor (코딩 없이 직접 편집)
+
+**가격**
+
+베타 특가: ₩200,000 1회 결제 (정가 ₩300,000)
+이후 구독료: 0원
+
+**라이브 데모**
+
+temp01.zpack.app — 직접 관리자 로그인해서 글을 써보실 수 있어요.
+
+소상공인, 병원, 학원, 스튜디오, 프리랜서 누구에게나 적합합니다. 코딩을 전혀 몰라도 됩니다.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-label">메이커 이야기</div>
+          <div class="card-title">디스콰이엇 "메이커 스토리" 포스트용</div>
+          <div class="card-meta">제품 등록 후 별도 게시글로 올리세요</div>
+        </div>
+        <button class="copy-btn" onclick="copyCard(this)">복사</button>
+      </div>
+      <div class="content-box">## 소상공인 홈페이지 문제를 해결하려 ZeroPack을 만들었습니다
+
+주변에서 반복해서 듣던 말이 있었습니다.
+
+"홈페이지 만들고 싶은데 개발자 견적이 너무 비싸요."
+"아임웹 쓰고 있는데 매달 나가는 돈이 아깝네요."
+"GitHub이 뭔지도 모르는데 제가 할 수 있을까요?"
+
+이 세 가지 문제를 동시에 해결하는 제품이 없다는 걸 확인하고, ZeroPack을 만들었습니다.
+
+### 핵심 아이디어
+
+GitHub + Vercel은 둘 다 무료 플랜이 있습니다. 이 두 플랫폼을 연결해서 고객의 계정에 홈페이지를 자동 배포하면, 이후 서버 비용이 0원이 됩니다.
+
+고객은 한 번 결제하고, 코드는 자기 GitHub에 올라가고, 사이트는 Vercel에 무료로 호스팅됩니다. 영원히.
+
+### 실제 만들어진 것
+
+- 게시판 4종 (공지/블로그/FAQ/채용)
+- 포트폴리오 갤러리
+- 문의 폼
+- 관리자 로그인 + 대시보드
+- Visual Editor (코딩 없이 편집)
+
+### 가격
+
+베타 특가 ₩200,000 — 정가는 ₩300,000입니다.
+
+데모 사이트 한번 구경해 보세요. 관리자로 직접 로그인해서 글도 써볼 수 있습니다.
+👉 temp01.zpack.app</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-label">태그</div>
+          <div class="card-title">디스콰이엇 태그 추천</div>
+        </div>
+        <button class="copy-btn" onclick="copyCard(this)">복사</button>
+      </div>
+      <div class="content-box" style="display:flex; flex-wrap:wrap; gap:6px; white-space:normal;">
+        <span class="dq-tag">#홈페이지</span>
+        <span class="dq-tag">#웹빌더</span>
+        <span class="dq-tag">#소상공인</span>
+        <span class="dq-tag">#소기업</span>
+        <span class="dq-tag">#SaaS</span>
+        <span class="dq-tag">#노코드</span>
+        <span class="dq-tag">#1회결제</span>
+        <span class="dq-tag">#GitHub</span>
+        <span class="dq-tag">#Vercel</span>
+        <span class="dq-tag">#프리랜서</span>
+        <span class="dq-tag">#포트폴리오</span>
+        <span class="dq-tag">#관리자페이지</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Tab switching
+  document.querySelectorAll('.tab-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var target = this.getAttribute('data-tab');
+      document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+      document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+      this.classList.add('active');
+      document.getElementById('tab-' + target).classList.add('active');
+    });
+  });
+
+  // Copy button
+  function copyCard(btn) {
+    var box = btn.closest('.card').querySelector('.content-box');
+    var text = box.innerText.trim();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function() {
+        btn.textContent = '복사됨 ✓';
+        btn.classList.add('copied');
+        setTimeout(function() {
+          btn.textContent = '복사';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    } else {
+      // fallback
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try { document.execCommand('copy'); } catch(e) {}
+      document.body.removeChild(ta);
+      btn.textContent = '복사됨 ✓';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = '복사';
+        btn.classList.remove('copied');
+      }, 2000);
+    }
+  }
+</script>
+</body>
+</html>
