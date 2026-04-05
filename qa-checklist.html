@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZeroPack QA 체크리스트</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#0a0a10;color:#e0e0f0;padding:32px 20px;line-height:1.6;font-size:14px}
+.container{max-width:1000px;margin:0 auto}
+h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
+.subtitle{font-size:13px;color:#666;margin-bottom:24px}
+
+/* Progress */
+.progress-bar-wrap{background:#1a1a28;border-radius:8px;padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;gap:20px}
+.progress-nums{font-size:13px;color:#888;white-space:nowrap}
+.progress-nums strong{color:#a78bff;font-size:18px}
+.bar-bg{flex:1;height:8px;background:#222;border-radius:100px;overflow:hidden}
+.bar-fill{height:100%;background:linear-gradient(90deg,#6c47ff,#a78bff);border-radius:100px;transition:width .3s}
+.pct{font-size:13px;color:#a78bff;font-weight:700;white-space:nowrap}
+
+/* Section */
+.section{margin-bottom:32px}
+.section-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #1e1e30}
+.section-title{font-size:16px;font-weight:700;color:#fff}
+.section-badge{font-size:11px;background:#1e1e30;color:#888;border-radius:6px;padding:2px 8px}
+.section-count{font-size:12px;color:#555;margin-left:auto}
+
+/* Item */
+.item{display:grid;grid-template-columns:24px 1fr auto auto;align-items:start;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;transition:background .15s}
+.item:hover{background:#111118}
+.item.checked{background:#0f1a0f}
+.item.failed{background:#1a0f0f}
+
+.item input[type=checkbox]{width:16px;height:16px;accent-color:#a78bff;cursor:pointer;margin-top:2px;flex-shrink:0}
+
+.item-content{min-width:0}
+.item-label{font-size:13px;color:#ddd;margin-bottom:2px}
+.item.checked .item-label{color:#666;text-decoration:line-through}
+.item-detail{font-size:11px;color:#555;line-height:1.5}
+
+.cat{font-size:10px;font-weight:600;padding:1px 7px;border-radius:100px;white-space:nowrap;flex-shrink:0;margin-top:3px}
+.cat-func{background:#1e1a3a;color:#a78bff}
+.cat-ui{background:#1a2e1a;color:#4ade80}
+.cat-res{background:#2e1a1a;color:#f97316}
+.cat-admin{background:#1a2a3a;color:#38bdf8}
+.cat-seo{background:#2a1a2e;color:#e879f9}
+
+.status-select{font-size:11px;border:1px solid #222;border-radius:6px;background:#111;color:#888;padding:2px 6px;cursor:pointer;margin-top:2px}
+.status-select.pass{background:#0f1f0f;color:#4ade80;border-color:#22c55e30}
+.status-select.fail{background:#1f0f0f;color:#f87171;border-color:#ef444430}
+.status-select.skip{background:#1a1a1a;color:#555;border-color:#333}
+
+/* Priority */
+.p0{color:#ff6b6b;font-weight:700}
+.p1{color:#facc15;font-weight:600}
+.p2{color:#888}
+
+.note-input{display:none;width:100%;margin-top:6px;background:#111;border:1px solid #222;border-radius:6px;padding:6px 10px;color:#aaa;font-size:12px;resize:vertical}
+.item.show-note .note-input{display:block}
+
+.subsection{font-size:12px;font-weight:700;color:#a78bff;margin:16px 0 8px 0;padding:6px 10px;background:#0f0f1a;border-left:3px solid #6c47ff;border-radius:0 6px 6px 0}
+
+/* Legend */
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;font-size:12px;color:#666}
+.legend span{display:flex;align-items:center;gap:5px}
+
+/* Sticky summary */
+.sticky-bar{position:sticky;top:0;z-index:100;background:#0a0a10;padding:10px 0;border-bottom:1px solid #1a1a28;margin-bottom:20px}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>ZeroPack QA 체크리스트</h1>
+<div class="subtitle">대상: temp01.zpack.app · temp01-02.zpack.app (서브페이지/기능은 모든 템플릿 공통) · 작성: 2026-04-06</div>
+
+<div class="sticky-bar">
+  <div class="progress-bar-wrap">
+    <div class="progress-nums">완료 <strong id="doneCount">0</strong> / <span id="totalCount">0</span></div>
+    <div class="bar-bg"><div class="bar-fill" id="barFill" style="width:0%"></div></div>
+    <div class="pct" id="pct">0%</div>
+    <div style="font-size:12px;color:#888;white-space:nowrap">실패 <span id="failCount" style="color:#f87171;font-weight:700">0</span></div>
+  </div>
+</div>
+
+<div class="legend">
+  <span><span class="cat cat-func">기능</span> 기능 동작</span>
+  <span><span class="cat cat-ui">UI</span> 화면/표시</span>
+  <span><span class="cat cat-res">반응형</span> 모바일/태블릿</span>
+  <span><span class="cat cat-admin">어드민</span> 관리자 기능</span>
+  <span><span class="cat cat-seo">SEO</span> 메타/검색</span>
+  <span><span class="p0">P0</span> 치명 <span class="p1">P1</span> 중요 <span class="p2">P2</span> 일반</span>
+</div>
+
+<!-- ======== 1. 공통 ======== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-title">1. 공통 (Header · Footer · 전역)</div>
+    <div class="section-badge">모든 페이지</div>
+    <div class="section-count" id="sec1-count"></div>
+  </div>
+
+  <div class="item" data-sec="1">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 헤더 — 모든 GNB 메뉴 클릭 시 해당 페이지로 이동</div><div class="item-detail">공지사항 / FAQ / 포트폴리오 / 블로그 / 채용 / 문의 6개 링크 각각 확인</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="1">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 헤더 로고 클릭 → 홈(/)으로 이동</div><div class="item-detail">서브페이지에서 로고 클릭 시 메인으로 복귀</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="1">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 헤더 — 현재 페이지 메뉴 활성(active) 표시</div><div class="item-detail">각 페이지 진입 시 해당 메뉴 강조 표시 여부</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="1">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 헤더 — 모바일 햄버거 메뉴 열기/닫기</div><div class="item-detail">375px 뷰포트에서 햄버거 버튼 탭 → 메뉴 펼침. 메뉴 항목 탭 후 닫힘 확인</div></div><span class="cat cat-res">반응형</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="1">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 다크모드 토글 — 라이트/다크 전환</div><div class="item-detail">토글 클릭 시 즉시 테마 전환. 페이지 새로고침 후에도 선택 유지(localStorage)</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="1">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 푸터 — 이용약관 링크 → /terms 이동</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="1">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 푸터 — 개인정보처리방침 링크 → /privacy 이동</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="1">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 푸터 — 관리자 로그인 링크 → /admin-login 이동</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="1">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 존재하지 않는 URL 접근 시 404 페이지 표시</div><div class="item-detail">/abc123 등 임의 URL → 404 페이지 or 홈 리다이렉트 확인</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="1">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 브라우저 콘솔 오류 없음 (공통)</div><div class="item-detail">각 페이지 DevTools Console에서 빨간 에러 없음 확인</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="1">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 모바일 (375px) 레이아웃 깨짐 없음 — 전 페이지</div><div class="item-detail">가로 스크롤 발생 여부, 글자 잘림, 버튼 겹침 등 확인</div></div><span class="cat cat-res">반응형</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="1">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 태블릿 (768px) 레이아웃 깨짐 없음 — 전 페이지</div></div><span class="cat cat-res">반응형</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+</div>
+
+<!-- ======== 2. 메인 페이지 ======== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-title">2. 메인 페이지 (/)</div>
+    <div class="section-badge">temp01 · temp01-02 각각 확인</div>
+    <div class="section-count" id="sec2-count"></div>
+  </div>
+
+  <div class="subsection">temp01.zpack.app vs temp01-02.zpack.app 공통</div>
+  <div class="item" data-sec="2">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 메인 페이지 정상 로드 (HTTP 200, 흰 화면 없음)</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="2">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 히어로 섹션 텍스트·CTA 버튼 표시</div><div class="item-detail">헤드라인, 서브텍스트, "프로젝트 문의하기" 버튼 정상 렌더링</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="2">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 히어로 CTA 버튼 → /contact 이동</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="2">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 통계 숫자 섹션 표시 (150+ Projects, 99.9% Uptime 등)</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="2">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 비교 섹션 표 렌더링</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="2">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 기능 카드 5개 모두 표시 (커스텀SW, 클라우드DX, 기술지원, AI, 고객성장)</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="2">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 기술 스택 섹션 표시</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="2">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 서비스 대상 섹션 4개 카드 표시 (중소기업, 스타트업, 전문직, 오프라인)</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="2">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 프로세스 4단계 섹션 표시</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="2">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 최종 CTA 섹션 버튼 → /contact 이동</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+
+  <div class="subsection">temp01 vs temp01-02 디자인 차이 확인</div>
+  <div class="item" data-sec="2">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> temp01 메인 디자인 정상 렌더링 (고유 레이아웃 확인)</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="2">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> temp01-02 메인 디자인 정상 렌더링 (고유 레이아웃 확인)</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="2">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 두 템플릿 서브페이지(/notice, /faq 등) 동일하게 동작</div><div class="item-detail">서브페이지는 공통 컴포넌트이므로 한 곳에서 이상 시 양쪽 모두 확인</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+</div>
+
+<!-- ======== 3. 공지사항 ======== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-title">3. 공지사항 (/notice)</div>
+    <div class="section-badge">board 타입</div>
+    <div class="section-count" id="sec3-count"></div>
+  </div>
+
+  <div class="subsection">목록 페이지</div>
+  <div class="item" data-sec="3">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> /notice 페이지 정상 로드</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="3">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 글 목록 표시 — 제목, 날짜, 카테고리</div><div class="item-detail">게시글이 있을 경우 각 항목 정보 렌더링 확인</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="3">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 글 없을 때 빈 상태(empty state) 메시지 표시</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="3">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 페이지네이션 — 글 10건 이상 시 다음 페이지 버튼 표시 및 동작</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="3">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 카테고리 필터 — 카테고리 클릭 시 해당 글만 표시</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+
+  <div class="subsection">상세 페이지 (/notice/[id])</div>
+  <div class="item" data-sec="3">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 글 클릭 → 상세 페이지 이동</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="3">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 상세 페이지 — 제목, 날짜, 본문 내용 표시</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="3">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 상세 페이지 — 본문 내 이미지 정상 표시</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="3">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 상세 페이지 — "목록으로" 버튼 → /notice 이동</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="3">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 이전글/다음글 네비게이션 동작</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="3">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 존재하지 않는 글 ID 접근 시 404 or 목록 리다이렉트</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+</div>
+
+<!-- ======== 4. FAQ ======== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-title">4. FAQ (/faq)</div>
+    <div class="section-badge">board 타입 (아코디언)</div>
+    <div class="section-count" id="sec4-count"></div>
+  </div>
+
+  <div class="item" data-sec="4">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> /faq 페이지 정상 로드</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="4">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> FAQ 항목 목록 표시 (질문 제목)</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="4">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 아코디언 — 질문 클릭 시 답변 펼쳐짐</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="4">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 아코디언 — 이미 펼쳐진 항목 재클릭 시 닫힘</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="4">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 아코디언 — 여러 항목 동시 펼침 or 1개만 펼침 정책 확인</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="4">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 카테고리 필터 — 카테고리별 FAQ 필터링</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="4">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> "1:1 전문가 상담" CTA 버튼 → /contact 이동</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="4">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 글 없을 때 빈 상태 메시지 표시</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+</div>
+
+<!-- ======== 5. 포트폴리오 ======== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-title">5. 포트폴리오 (/portfolio)</div>
+    <div class="section-badge">gallery 타입</div>
+    <div class="section-count" id="sec5-count"></div>
+  </div>
+
+  <div class="subsection">갤러리 목록</div>
+  <div class="item" data-sec="5">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> /portfolio 페이지 정상 로드</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="5">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 갤러리 항목 — 썸네일 이미지 정상 로드</div><div class="item-detail">깨진 이미지(alt 텍스트만 표시) 없음</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="5">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 갤러리 항목 — 제목, 카테고리 표시</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="5">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 카테고리 필터 — 필터 클릭 시 해당 항목만 표시</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="5">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> "전체" 필터 클릭 시 모든 항목 표시</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="5">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 항목 없을 때 빈 상태 메시지 표시</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+
+  <div class="subsection">상세 페이지 (/portfolio/[id])</div>
+  <div class="item" data-sec="5">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 항목 클릭 → 상세 페이지 이동</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="5">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 상세 페이지 — 대표 이미지 정상 표시</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="5">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 상세 페이지 — 제목, 카테고리, 설명 텍스트 표시</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="5">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> "목록으로" 버튼 → /portfolio 이동</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="5">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 추가 이미지(멀티 이미지) 있을 경우 슬라이드/갤러리 동작</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+</div>
+
+<!-- ======== 6. 블로그 ======== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-title">6. 블로그 (/blog)</div>
+    <div class="section-badge">board 타입</div>
+    <div class="section-count" id="sec6-count"></div>
+  </div>
+
+  <div class="subsection">목록 페이지</div>
+  <div class="item" data-sec="6">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> /blog 페이지 정상 로드</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="6">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 글 목록 — 제목, 날짜, 카테고리, 썸네일 표시</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="6">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 카테고리 필터 동작</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="6">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 페이지네이션 동작</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="6">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 글 없을 때 빈 상태 메시지 표시</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+
+  <div class="subsection">상세 페이지 (/blog/[id])</div>
+  <div class="item" data-sec="6">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 글 클릭 → 상세 페이지 이동</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="6">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 상세 — 제목, 날짜, 카테고리, 태그 표시</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="6">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 상세 — 리치텍스트 본문 정상 렌더링 (굵기, 링크, 이미지 포함)</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="6">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> "목록으로" 버튼 → /blog 이동</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="6">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 이전글/다음글 네비게이션 동작</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="6">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 태그 클릭 → 해당 태그 글 목록 필터</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+</div>
+
+<!-- ======== 7. 채용 ======== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-title">7. 채용 (/careers)</div>
+    <div class="section-badge">board 타입</div>
+    <div class="section-count" id="sec7-count"></div>
+  </div>
+
+  <div class="item" data-sec="7">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> /careers 페이지 정상 로드</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="7">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 채용 공고 목록 — 포지션명, 고용형태, 마감일 표시</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="7">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 공고 클릭 → 상세 페이지 이동</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="7">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 상세 — 직무 설명, 자격 요건, 우대사항, 근무조건 표시</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="7">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 상세 — "지원하기" or 문의 버튼 → /contact 이동</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="7">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> "목록으로" 버튼 → /careers 이동</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="7">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 공고 없을 때 빈 상태 메시지 표시</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+</div>
+
+<!-- ======== 8. 문의 ======== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-title">8. 문의 (/contact)</div>
+    <div class="section-badge">form 타입</div>
+    <div class="section-count" id="sec8-count"></div>
+  </div>
+
+  <div class="item" data-sec="8">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> /contact 페이지 정상 로드</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="8">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 폼 필드 표시 — 이름, 이메일, 메시지 필드</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="8">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 필수 필드 빈 값 제출 시 오류 메시지 표시</div><div class="item-detail">이름 비움, 이메일 비움, 메시지 비움 각각 테스트</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="8">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 이메일 형식 검증 — 잘못된 형식 입력 시 오류</div><div class="item-detail">예: "abc" 입력 후 제출 → 이메일 형식 오류 메시지</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="8">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 정상 제출 → 성공 토스트/알림 표시</div><div class="item-detail">올바른 값 입력 후 "전송하기" 클릭 → 성공 메시지</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="8">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 제출 성공 후 폼 초기화</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="8">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 제출된 문의 → 어드민 수신함에서 확인 가능</div><div class="item-detail">제출 후 어드민 패널에서 해당 문의 내역 노출 확인</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="8">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 제출 버튼 — 처리 중 중복 클릭 방지 (로딩 상태)</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+</div>
+
+<!-- ======== 9. 이용약관/개인정보 ======== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-title">9. 이용약관 · 개인정보처리방침</div>
+    <div class="section-count" id="sec9-count"></div>
+  </div>
+
+  <div class="item" data-sec="9">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> /terms 페이지 정상 로드 및 내용 표시</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="9">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> /privacy 페이지 정상 로드 및 내용 표시</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="9">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 약관 페이지 — 헤더 네비게이션 및 푸터 정상 표시</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+</div>
+
+<!-- ======== 10. 어드민 로그인 ======== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-title">10. 어드민 로그인 (/admin-login)</div>
+    <div class="section-count" id="sec10-count"></div>
+  </div>
+
+  <div class="item" data-sec="10">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> /admin-login 페이지 정상 로드</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="10">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 비밀번호 입력 필드 표시 및 입력 가능</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="10">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 잘못된 비밀번호 입력 시 오류 메시지 표시</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="10">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 올바른 비밀번호 입력 → 홈 이동 + 편집 모드 활성</div><div class="item-detail">로그인 후 Edit Mode 버튼이 헤더에 나타나야 함</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="10">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> "홈으로 돌아가기(← Back to Home)" 링크 → / 이동</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="10">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 로그인 상태에서 /admin-login 재접근 시 처리 (리다이렉트 or 그대로)</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="10">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 로그인 세션 — 페이지 새로고침 후에도 로그인 유지</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="10">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 로그아웃 — 로그아웃 후 Edit Mode 버튼 사라짐</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+</div>
+
+<!-- ======== 11. Visual Editor ======== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-title">11. Visual Editor (편집 모드)</div>
+    <div class="section-badge">로그인 후 활성화</div>
+    <div class="section-count" id="sec11-count"></div>
+  </div>
+
+  <div class="subsection">편집 모드 진입/종료</div>
+  <div class="item" data-sec="11">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 로그인 후 헤더에 "Edit Mode" 버튼 표시</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="11">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> "Edit Mode" 버튼 클릭 → 편집 UI 활성화</div><div class="item-detail">편집 가능 요소에 하이라이트/테두리 표시 확인</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="11">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 편집 모드 종료(Exit) → 편집 UI 비활성화</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="11">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 편집 모드 — 각 페이지(메인, notice, faq 등) 진입 시 각각 편집 모드 유지</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+
+  <div class="subsection">텍스트 편집</div>
+  <div class="item" data-sec="11">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 텍스트 요소 클릭 → 인라인 텍스트 편집 활성화</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="11">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 텍스트 수정 후 저장 → 변경 내용 실제 반영</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="11">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 텍스트 수정 후 페이지 새로고침 → 저장된 내용 유지</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="11">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 텍스트 수정 취소 → 원래 내용으로 복원</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="11">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 히어로 헤드라인 텍스트 수정 테스트</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="11">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 서브텍스트/설명 문구 수정 테스트</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+
+  <div class="subsection">이미지 편집</div>
+  <div class="item" data-sec="11">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 이미지 클릭 → 이미지 업로드/변경 UI 활성화</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="11">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 이미지 파일 업로드 후 미리보기 표시</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="11">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 이미지 저장 → 실제 반영 및 새로고침 후 유지</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="11">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 지원 파일 형식 — jpg, png, webp, gif 업로드 성공</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="11">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 비지원 파일(pdf, exe 등) 업로드 시 오류 처리</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="11">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 대용량 이미지(10MB 이상) 업로드 시 처리 (거부 or 압축)</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+
+  <div class="subsection">섹션/컴포넌트 편집</div>
+  <div class="item" data-sec="11">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 편집 패널 — 섹션별 설정(색상, 배경 등) 변경 가능</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="11">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 회사명 변경 → 헤더/푸터/메타 전반 반영</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="11">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 테마 컬러(primary color) 변경 → 전체 반영</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="11">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 언어 설정 변경 → UI 텍스트 언어 전환</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+</div>
+
+<!-- ======== 12. 어드민 대시보드 (게시판 관리) ======== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-title">12. 어드민 대시보드 — 게시판 관리 (CRUD)</div>
+    <div class="section-badge">notice · faq · blog · careers · portfolio</div>
+    <div class="section-count" id="sec12-count"></div>
+  </div>
+
+  <div class="subsection">글 작성 (공통 — board 타입: notice, faq, blog, careers)</div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 새 글 작성 버튼 → 작성 폼 열림</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 제목 입력 필드 동작</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 리치텍스트 에디터 동작 — 텍스트 입력</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 리치텍스트 — 굵기(Bold), 기울임(Italic), 링크 삽입</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 리치텍스트 — 이미지 삽입 (파일 업로드)</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 카테고리 선택/입력 동작</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 태그 입력 및 다중 태그 설정 동작</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 발행(Publish) → 글 목록에 즉시 반영</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 임시저장(Draft) → 목록에 미발행 상태로 저장</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 제목 없이 발행 시 오류 메시지</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+
+  <div class="subsection">글 수정</div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 기존 글 수정 → 수정 폼에 기존 내용 로드</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 수정 저장 → 프론트 상세 페이지에 반영</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+
+  <div class="subsection">글 삭제</div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 삭제 버튼 → 확인 다이얼로그 표시</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 삭제 확인 → 목록에서 제거, 프론트에서도 사라짐</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 삭제 취소 → 글 유지</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+
+  <div class="subsection">포트폴리오 관리 (gallery 타입)</div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 포트폴리오 아이템 생성 — 대표 이미지 업로드</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 포트폴리오 — 제목, 카테고리, 설명 입력 및 저장</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 포트폴리오 — 추가 이미지(멀티) 업로드</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> 포트폴리오 저장 → /portfolio 갤러리에 즉시 반영</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 포트폴리오 정렬 순서 변경 동작</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+
+  <div class="subsection">문의 수신함</div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p0">P0</span> /contact 제출 문의 → 어드민 수신함 목록에 표시</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 문의 상세 — 이름, 이메일, 메시지, 수신일시 표시</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 문의 삭제 동작</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+
+  <div class="subsection">사이트 설정</div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 회사명 변경 → 저장 후 푸터/헤더 반영</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 대표 전화/주소/사업자번호 변경 → 저장 후 푸터 반영</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 로고 이미지 변경 → 저장 후 헤더 반영</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 어드민 비밀번호 변경 → 새 비밀번호로 로그인 성공</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 비밀번호 변경 후 기존 비밀번호로 로그인 실패 확인</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="12">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 메뉴 순서/노출 설정 변경 → GNB 반영</div></div><span class="cat cat-admin">어드민</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+</div>
+
+<!-- ======== 13. SEO / 메타 ======== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-title">13. SEO · 메타태그</div>
+    <div class="section-count" id="sec13-count"></div>
+  </div>
+
+  <div class="item" data-sec="13">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 메인 페이지 — &lt;title&gt; 태그 설정</div><div class="item-detail">빈 값이거나 "ZeroPack" 기본값 그대로 아닌지 확인</div></div><span class="cat cat-seo">SEO</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="13">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 메인 — meta description 있음</div></div><span class="cat cat-seo">SEO</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="13">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 메인 — og:title, og:description, og:image 있음</div></div><span class="cat cat-seo">SEO</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="13">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 블로그 상세 페이지 — 글 제목이 &lt;title&gt;에 반영</div></div><span class="cat cat-seo">SEO</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="13">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 포트폴리오 상세 — og:image에 대표 이미지 반영</div></div><span class="cat cat-seo">SEO</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="13">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> favicon 표시 (브라우저 탭 아이콘)</div></div><span class="cat cat-seo">SEO</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="13">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> robots.txt 접근 가능 (/robots.txt)</div></div><span class="cat cat-seo">SEO</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="13">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> sitemap.xml 접근 가능 (/sitemap.xml)</div></div><span class="cat cat-seo">SEO</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+</div>
+
+<!-- ======== 14. 성능/안정성 ======== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-title">14. 성능 · 안정성</div>
+    <div class="section-count" id="sec14-count"></div>
+  </div>
+
+  <div class="item" data-sec="14">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 메인 페이지 초기 로드 3초 이내 (LCP)</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="14">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 각 서브페이지 로드 2초 이내</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="14">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 깨진 이미지 없음 — 전 페이지 alt 태그 확인</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="14">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p1">P1</span> 브라우저 뒤로가기 — 이전 페이지 정상 복원</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="14">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 네트워크 느린 환경(3G 스로틀링)에서 로딩 스피너/스켈레톤 표시</div></div><span class="cat cat-ui">UI</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+  <div class="item" data-sec="14">
+    <input type="checkbox"><div class="item-content"><div class="item-label"><span class="p2">P2</span> 멀티 탭 동시 접속 — 세션 충돌 없음</div></div><span class="cat cat-func">기능</span><select class="status-select" onchange="onStatus(this)"><option value="">-</option><option value="pass">통과</option><option value="fail">실패</option><option value="skip">N/A</option></select>
+  </div>
+</div>
+
+</div>
+
+<script>
+function updateProgress() {
+  const all = document.querySelectorAll('.item input[type=checkbox]');
+  const checked = document.querySelectorAll('.item input[type=checkbox]:checked');
+  const failed = document.querySelectorAll('.status-select.fail');
+  const total = all.length;
+  const done = checked.length;
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById('doneCount').textContent = done;
+  document.getElementById('totalCount').textContent = total;
+  document.getElementById('pct').textContent = pct + '%';
+  document.getElementById('barFill').style.width = pct + '%';
+  document.getElementById('failCount').textContent = failed.length;
+
+  // section counts
+  for (let i=1; i<=14; i++) {
+    const secEl = document.getElementById('sec'+i+'-count');
+    if (!secEl) continue;
+    const secItems = document.querySelectorAll(`.item[data-sec="${i}"] input[type=checkbox]`);
+    const secDone = document.querySelectorAll(`.item[data-sec="${i}"] input[type=checkbox]:checked`);
+    secEl.textContent = secDone.length + ' / ' + secItems.length;
+  }
+}
+
+function onStatus(sel) {
+  sel.className = 'status-select ' + sel.value;
+  const item = sel.closest('.item');
+  const cb = item.querySelector('input[type=checkbox]');
+  if (sel.value === 'pass') { cb.checked = true; item.className = 'item checked'; }
+  else if (sel.value === 'fail') { cb.checked = true; item.className = 'item failed'; }
+  else if (sel.value === 'skip') { cb.checked = true; item.className = 'item'; }
+  else { cb.checked = false; item.className = 'item'; }
+  updateProgress();
+  saveState();
+}
+
+document.querySelectorAll('.item').forEach(item => {
+  item.addEventListener('click', e => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'OPTION') return;
+    const cb = item.querySelector('input[type=checkbox]');
+    cb.checked = !cb.checked;
+    if (!cb.checked) { item.className='item'; item.querySelector('.status-select').value=''; item.querySelector('.status-select').className='status-select'; }
+    updateProgress(); saveState();
+  });
+});
+
+function saveState() {
+  const state = {};
+  document.querySelectorAll('.item').forEach((item, i) => {
+    const cb = item.querySelector('input[type=checkbox]');
+    const sel = item.querySelector('.status-select');
+    state[i] = { checked: cb.checked, status: sel.value };
+  });
+  localStorage.setItem('zp_qa_state', JSON.stringify(state));
+}
+
+function loadState() {
+  const raw = localStorage.getItem('zp_qa_state');
+  if (!raw) return;
+  const state = JSON.parse(raw);
+  document.querySelectorAll('.item').forEach((item, i) => {
+    if (!state[i]) return;
+    const cb = item.querySelector('input[type=checkbox]');
+    const sel = item.querySelector('.status-select');
+    cb.checked = state[i].checked;
+    sel.value = state[i].status;
+    sel.className = 'status-select ' + sel.value;
+    if (state[i].status === 'pass') item.className = 'item checked';
+    else if (state[i].status === 'fail') item.className = 'item failed';
+    else item.className = 'item';
+  });
+  updateProgress();
+}
+
+loadState();
+updateProgress();
+</script>
+</body>
+</html>
