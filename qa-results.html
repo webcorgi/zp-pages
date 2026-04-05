@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZeroPack QA 결과 보고서 — 10개 템플릿</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#0a0a10;color:#e0e0f0;padding:32px 20px;line-height:1.6;font-size:14px}
+.container{max-width:1100px;margin:0 auto}
+h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:4px}
+.subtitle{font-size:13px;color:#555;margin-bottom:28px}
+h2{font-size:16px;font-weight:700;color:#a78bff;margin:32px 0 14px;padding-bottom:8px;border-bottom:1px solid #1e1e30}
+h3{font-size:14px;font-weight:700;color:#e0e0f0;margin:20px 0 10px}
+
+/* Summary boxes */
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:32px}
+.summary-box{background:#111118;border:1px solid #1e1e30;border-radius:10px;padding:16px;text-align:center}
+.summary-box .num{font-size:28px;font-weight:900;margin-bottom:4px}
+.summary-box .lbl{font-size:12px;color:#666}
+.num-green{color:#4ade80}
+.num-yellow{color:#facc15}
+.num-red{color:#f87171}
+.num-blue{color:#60a5fa}
+
+/* Matrix table */
+.matrix-wrap{overflow-x:auto;margin-bottom:32px}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:900px}
+th{background:#111118;color:#666;font-weight:600;padding:10px 12px;text-align:center;border:1px solid #1e1e30;white-space:nowrap}
+th.row-header{text-align:left}
+td{padding:8px 10px;border:1px solid #1a1a28;text-align:center;vertical-align:middle}
+tr:nth-child(even) td{background:#0d0d14}
+td.row-label{text-align:left;font-weight:600;color:#ccc;white-space:nowrap;background:#111118}
+td.row-sub{text-align:left;color:#888;padding-left:24px;background:#0a0a10;font-size:11px}
+
+.pass{color:#4ade80;font-weight:700}
+.fail{color:#f87171;font-weight:700}
+.warn{color:#facc15;font-weight:700}
+.manual{color:#60a5fa;font-size:11px}
+.na{color:#444}
+
+/* Issues */
+.issue-section{margin-bottom:28px}
+.issue-item{border-radius:8px;padding:14px 18px;margin-bottom:10px}
+.issue-p0{background:#1f0a0a;border:1px solid #ef444430}
+.issue-p1{background:#1f1a0a;border:1px solid #f9731630}
+.issue-p2{background:#0a0f1a;border:1px solid #3b82f630}
+.issue-header{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.p-badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:100px;white-space:nowrap}
+.p0-badge{background:#ef444420;color:#f87171;border:1px solid #ef444440}
+.p1-badge{background:#f9731620;color:#fb923c;border:1px solid #f9731640}
+.p2-badge{background:#3b82f620;color:#60a5fa;border:1px solid #3b82f640}
+.issue-title{font-weight:700;font-size:13px;color:#e0e0f0}
+.issue-body{font-size:12px;color:#888;line-height:1.6}
+.issue-body strong{color:#ccc}
+.affected{font-size:11px;color:#666;margin-top:4px}
+
+/* Manual test list */
+.manual-list{background:#0d0d1a;border:1px solid #1e1e30;border-radius:10px;padding:16px 20px;margin-bottom:20px}
+.manual-list li{font-size:13px;color:#aaa;margin:6px 0 6px 20px;line-height:1.6}
+.manual-list li strong{color:#60a5fa}
+
+/* Per-template */
+.template-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px}
+.t-card{background:#111118;border:1px solid #1e1e30;border-radius:10px;padding:16px}
+.t-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.t-name{font-weight:700;color:#fff;font-size:14px}
+.t-url{font-size:11px;color:#555}
+.t-status{font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px}
+.t-ok{background:#0f1f0f;color:#4ade80;border:1px solid #22c55e30}
+.t-warn{background:#1f1a0a;color:#facc15;border:1px solid #ca8a0430}
+.t-list{list-style:none;font-size:12px}
+.t-list li{display:flex;gap:8px;align-items:flex-start;padding:4px 0;border-bottom:1px solid #1a1a28}
+.t-list li:last-child{border-bottom:none}
+.t-list .icon{flex-shrink:0;width:16px}
+
+/* tag */
+.tag{font-size:10px;padding:1px 6px;border-radius:4px;font-weight:600}
+.tag-green{background:#0f1f0f;color:#4ade80;border:1px solid #22c55e30}
+.tag-red{background:#1f0a0a;color:#f87171;border:1px solid #ef444430}
+.tag-yellow{background:#1f1a0a;color:#facc15;border:1px solid #ca8a0430}
+.tag-blue{background:#0a0f1a;color:#60a5fa;border:1px solid #3b82f630}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>ZeroPack QA 결과 보고서</h1>
+<div class="subtitle">대상: temp01 ~ temp01-10 (10개 템플릿) &nbsp;·&nbsp; 테스터: Claude Code (자동 + 수동 병행) &nbsp;·&nbsp; 날짜: 2026-04-06</div>
+
+<!-- Summary -->
+<div class="summary-grid">
+  <div class="summary-box">
+    <div class="num num-blue">130+</div>
+    <div class="lbl">QA 체크 항목</div>
+  </div>
+  <div class="summary-box">
+    <div class="num num-green">87%</div>
+    <div class="lbl">자동 테스트 통과율</div>
+  </div>
+  <div class="summary-box">
+    <div class="num num-red">8</div>
+    <div class="lbl">발견된 이슈</div>
+  </div>
+  <div class="summary-box">
+    <div class="num num-yellow">38</div>
+    <div class="lbl">수동 테스트 필요 항목</div>
+  </div>
+</div>
+
+<!-- Matrix -->
+<h2>1. 템플릿별 페이지 로드 현황</h2>
+<div class="matrix-wrap">
+<table>
+  <thead>
+    <tr>
+      <th class="row-header">항목</th>
+      <th>temp01</th>
+      <th>temp01-02</th>
+      <th>temp01-03<br><small style="color:#888">AmberCore</small></th>
+      <th>temp01-04<br><small style="color:#888">DigitalWorks</small></th>
+      <th>temp01-05<br><small style="color:#888">Z-Comm</small></th>
+      <th>temp01-06<br><small style="color:#888">Hospital v1</small></th>
+      <th>temp01-07<br><small style="color:#888">Hospital v2</small></th>
+      <th>temp01-08</th>
+      <th>temp01-09</th>
+      <th>temp01-10</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="row-label">메인 / HTTP 200</td>
+      <td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+      <td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+    </tr>
+    <tr>
+      <td class="row-label">메인 섹션 완성도</td>
+      <td class="pass">완전</td><td class="pass">완전</td><td class="pass">완전</td>
+      <td class="warn">⚠ 일부 다름</td><td class="warn">⚠ 일부 다름</td>
+      <td class="pass">완전</td><td class="pass">완전</td><td class="pass">완전</td><td class="pass">완전</td><td class="pass">완전</td>
+    </tr>
+    <tr>
+      <td class="row-label">/notice 로드</td>
+      <td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+      <td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+    </tr>
+    <tr>
+      <td class="row-label">/faq 로드</td>
+      <td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+      <td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+    </tr>
+    <tr>
+      <td class="row-label">FAQ 컨텐츠</td>
+      <td class="warn">⚠ 플레이스홀더</td><td class="warn">⚠</td><td class="pass">6개</td>
+      <td class="pass">3개</td><td class="pass">2개</td>
+      <td class="warn">⚠ IT내용 불일치</td><td class="pass">있음</td><td class="warn">⚠ 없음</td><td class="warn">⚠ 없음</td><td class="warn">⚠ 없음</td>
+    </tr>
+    <tr>
+      <td class="row-label">/portfolio 로드</td>
+      <td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+      <td class="pass">✓</td><td class="pass">✓(Doctors)</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+    </tr>
+    <tr>
+      <td class="row-label">/blog 로드</td>
+      <td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+      <td class="pass">✓</td><td class="pass">✓(Health News)</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+    </tr>
+    <tr>
+      <td class="row-label">/careers 로드</td>
+      <td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+      <td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+    </tr>
+    <tr>
+      <td class="row-label">/contact 로드 + 폼</td>
+      <td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+      <td class="pass">✓</td><td class="pass">✓(Appt)</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+    </tr>
+    <tr>
+      <td class="row-label">/terms 로드</td>
+      <td class="warn">⚠ CSR</td><td class="warn">⚠ CSR</td><td class="warn">⚠ CSR</td><td class="warn">⚠ CSR</td><td class="warn">⚠ CSR</td>
+      <td class="warn">⚠ CSR</td><td class="warn">⚠ CSR</td><td class="warn">⚠ CSR</td><td class="warn">⚠ CSR</td><td class="warn">⚠ CSR</td>
+    </tr>
+    <tr>
+      <td class="row-label">/privacy 로드</td>
+      <td class="warn">⚠ CSR</td><td class="warn">⚠ CSR</td><td class="warn">⚠ CSR</td><td class="warn">⚠ CSR</td><td class="warn">⚠ CSR</td>
+      <td class="warn">⚠ CSR</td><td class="warn">⚠ CSR</td><td class="warn">⚠ CSR</td><td class="warn">⚠ CSR</td><td class="warn">⚠ CSR</td>
+    </tr>
+    <tr>
+      <td class="row-label">/admin-login 로드</td>
+      <td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+      <td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+    </tr>
+    <tr>
+      <td class="row-label">404 처리</td>
+      <td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+      <td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+    </tr>
+    <tr>
+      <td class="row-label">robots.txt</td>
+      <td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+      <td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+    </tr>
+    <tr>
+      <td class="row-label">sitemap.xml</td>
+      <td class="fail">✗ 404</td><td class="fail">✗ 404</td><td class="fail">✗ 404</td><td class="fail">✗ 404</td><td class="fail">✗ 404</td>
+      <td class="fail">✗ 404</td><td class="fail">✗ 404</td><td class="fail">✗ 404</td><td class="fail">✗ 404</td><td class="fail">✗ 404</td>
+    </tr>
+    <tr>
+      <td class="row-label">og:title · og:description</td>
+      <td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+      <td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+    </tr>
+    <tr>
+      <td class="row-label">og:image</td>
+      <td class="pass">✓ CDN</td><td class="pass">✓ CDN</td><td class="warn">⚠ /og-image.png</td><td class="pass">✓ CDN</td><td class="pass">✓ CDN</td>
+      <td class="warn">⚠ staging URL</td><td class="pass">✓</td><td class="pass">✓ CDN</td><td class="pass">✓ CDN</td><td class="warn">⚠ staging URL</td>
+    </tr>
+    <tr>
+      <td class="row-label">브랜드 일관성</td>
+      <td class="pass">✓</td><td class="pass">✓</td><td class="fail">✗ 불일치</td><td class="pass">✓</td><td class="pass">✓</td>
+      <td class="warn">⚠ 콘텐츠 불일치</td><td class="pass">✓ 일관적</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+    </tr>
+    <tr>
+      <td class="row-label">어드민 로그인<br><span class="manual">수동 필요</span></td>
+      <td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td>
+      <td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td>
+    </tr>
+    <tr>
+      <td class="row-label">Visual Editor<br><span class="manual">수동 필요</span></td>
+      <td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td>
+      <td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td>
+    </tr>
+    <tr>
+      <td class="row-label">문의폼 제출<br><span class="manual">수동 필요</span></td>
+      <td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td>
+      <td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td>
+    </tr>
+    <tr>
+      <td class="row-label">FAQ 아코디언<br><span class="manual">수동 필요</span></td>
+      <td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td>
+      <td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td>
+    </tr>
+    <tr>
+      <td class="row-label">모바일 반응형<br><span class="manual">수동 필요</span></td>
+      <td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td>
+      <td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td><td class="manual">수동</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<!-- Issues -->
+<h2>2. 발견된 이슈 (우선순위순)</h2>
+
+<div class="issue-item issue-p0">
+  <div class="issue-header">
+    <span class="p-badge p0-badge">P0 치명</span>
+    <div class="issue-title">sitemap.xml 미존재 — 전체 10개 템플릿 404</div>
+  </div>
+  <div class="issue-body">
+    <strong>증상:</strong> /sitemap.xml 접근 시 404 반환. 생성 자체가 안 되어 있음.<br>
+    <strong>영향:</strong> 구글/네이버 검색엔진 색인 효율 저하. SEO 직접 타격. 고객이 배포 후 자연 검색 유입에 불리.<br>
+    <strong>조치:</strong> Next.js sitemap 자동 생성 설정 추가 (next-sitemap 또는 app/sitemap.ts)
+  </div>
+  <div class="affected">영향 범위: 전체 10개 템플릿</div>
+</div>
+
+<div class="issue-item issue-p0">
+  <div class="issue-header">
+    <span class="p-badge p0-badge">P0 치명</span>
+    <div class="issue-title">temp01-03 (AmberCore) — 헤더 브랜드명 vs 콘텐츠 브랜드명 불일치</div>
+  </div>
+  <div class="issue-body">
+    <strong>증상:</strong> 헤더/로고/메타 태그는 <strong>"AmberCore"</strong>를 표시하지만, 페이지 본문 콘텐츠·푸터·회사 정보는 <strong>"Z-Tech Solutions"</strong>를 표시함.<br>
+    <strong>영향:</strong> 사용자가 같은 페이지에서 두 개의 다른 브랜드를 보게 됨. 신뢰도 치명타.<br>
+    <strong>조치:</strong> 데모용 콘텐츠를 AmberCore에 맞게 교체하거나, 회사명 변수 일원화 처리 확인.
+  </div>
+  <div class="affected">영향 범위: temp01-03 (AmberCore)</div>
+</div>
+
+<div class="issue-item issue-p1">
+  <div class="issue-header">
+    <span class="p-badge p1-badge">P1 중요</span>
+    <div class="issue-title">temp01-06 (Hospital v1) — 병원 브랜딩에 IT 개발 FAQ 내용 혼재</div>
+  </div>
+  <div class="issue-body">
+    <strong>증상:</strong> 메인 페이지는 "서울 한빛병원" 병원 테마이지만, /faq 페이지에 "소스코드는 누가 소유하나요?", "개발 일정이 지연되면?" 등 IT 개발 회사용 FAQ 5개가 노출됨.<br>
+    <strong>영향:</strong> 병원 방문 예정 환자가 IT 개발 내용을 보게 됨. 콘텐츠 신뢰도 저하.<br>
+    <strong>조치:</strong> 병원 템플릿 FAQ 콘텐츠를 진료/예약/위치/보험 관련으로 교체.
+  </div>
+  <div class="affected">영향 범위: temp01-06</div>
+</div>
+
+<div class="issue-item issue-p1">
+  <div class="issue-header">
+    <span class="p-badge p1-badge">P1 중요</span>
+    <div class="issue-title">/terms · /privacy — 서버사이드 렌더링 없음 (Client-side only)</div>
+  </div>
+  <div class="issue-body">
+    <strong>증상:</strong> HTML 소스에서 약관 본문이 "Loading..." 상태로 표시됨. 자바스크립트 실행 후에야 콘텐츠 로드.<br>
+    <strong>영향:</strong> 검색엔진 크롤러가 약관·개인정보 내용을 인덱싱 불가. 개인정보처리방침은 실제 내용이 접근 가능해야 법적 요건 충족 가능.<br>
+    <strong>조치:</strong> /terms, /privacy 라우트를 SSR 또는 SSG로 전환하여 HTML에 콘텐츠 포함.
+  </div>
+  <div class="affected">영향 범위: 전체 10개 템플릿</div>
+</div>
+
+<div class="issue-item issue-p1">
+  <div class="issue-header">
+    <span class="p-badge p1-badge">P1 중요</span>
+    <div class="issue-title">temp01-06, temp01-10 — og:image가 staging 도메인 URL 참조</div>
+  </div>
+  <div class="issue-body">
+    <strong>증상:</strong> og:image 값이 <code>https://temp01-06.zpack.app/og-image.png</code>, <code>https://temp01-10.zpack.app/og-image.png</code>로 설정됨. 고객이 커스텀 도메인 연결 시 og:image가 여전히 zpack 서브도메인을 참조.<br>
+    <strong>영향:</strong> SNS 공유 시 이미지 로드 실패 가능. 도메인 이전 후 broken OG image.<br>
+    <strong>조치:</strong> og:image는 절대 경로 대신 상대경로 <code>/og-image.png</code> 또는 CDN 고정 URL 사용.
+  </div>
+  <div class="affected">영향 범위: temp01-06, temp01-10 (temp01-03도 /og-image.png 상대경로로 유사 이슈)</div>
+</div>
+
+<div class="issue-item issue-p1">
+  <div class="issue-header">
+    <span class="p-badge p1-badge">P1 중요</span>
+    <div class="issue-title">FAQ 항목 미작성 — 5개 템플릿에서 FAQ 내용 없음</div>
+  </div>
+  <div class="issue-body">
+    <strong>증상:</strong> temp01(플레이스홀더 1개), temp01-02, temp01-08, temp01-09, temp01-10에서 FAQ 항목이 비어있거나 "New Question" 플레이스홀더만 존재.<br>
+    <strong>영향:</strong> 고객이 라이선스 키 입력 → Vercel 배포 완료 후 공개 사이트에 빈 FAQ가 노출됨. 데모 품질 저하.<br>
+    <strong>조치:</strong> 각 템플릿에 맞는 기본 FAQ 3~5개 사전 등록 (시드 데이터 추가).
+  </div>
+  <div class="affected">영향 범위: temp01, temp01-02, temp01-08, temp01-09, temp01-10</div>
+</div>
+
+<div class="issue-item issue-p2">
+  <div class="issue-header">
+    <span class="p-badge p2-badge">P2 일반</span>
+    <div class="issue-title">temp01-04 (DigitalWorks), temp01-05 — 메인 페이지 일부 섹션 구성 다름</div>
+  </div>
+  <div class="issue-body">
+    <strong>증상:</strong> 비교 테이블 섹션, 4분류 타겟 섹션이 없고 피처카드 개수가 다름 (QA 기준 5개 대비 4개).<br>
+    <strong>판단:</strong> 템플릿 디자인이 다른 것이라면 의도적 차이. 하지만 QA 체크리스트 항목과 일치 여부를 디자인팀에 확인 필요.<br>
+    <strong>조치:</strong> 의도적 디자인 차이인지 개발 누락인지 확인 후 처리.
+  </div>
+  <div class="affected">영향 범위: temp01-04, temp01-05</div>
+</div>
+
+<div class="issue-item issue-p2">
+  <div class="issue-header">
+    <span class="p-badge p2-badge">P2 일반</span>
+    <div class="issue-title">blog · careers · portfolio — 전체 템플릿 데모 콘텐츠 없음</div>
+  </div>
+  <div class="issue-body">
+    <strong>증상:</strong> /blog, /careers, /portfolio 모두 빈 상태 (No posts). 고객이 사이트 배포 직후 모든 게시판이 비어있는 상태로 공개됨.<br>
+    <strong>영향:</strong> 첫인상 저하. 구매 후 빈 사이트를 보고 당황할 수 있음.<br>
+    <strong>조치:</strong> 각 게시판에 샘플 게시물 2~3개 기본 등록. 또는 "관리자 등록 전 표시되는 안내 메시지" 추가.
+  </div>
+  <div class="affected">영향 범위: 전체 10개 템플릿</div>
+</div>
+
+<!-- Manual test list -->
+<h2>3. 수동 테스트 필요 항목 (자동화 불가)</h2>
+<p style="font-size:13px;color:#666;margin-bottom:12px">아래 항목은 브라우저에서 직접 확인이 필요합니다. <strong style="color:#60a5fa">temp01.zpack.app 하나에서 테스트하면 모든 템플릿에 적용</strong>됩니다 (서브페이지/기능 공통).</p>
+
+<div class="manual-list">
+  <h3 style="color:#60a5fa;margin-bottom:8px">어드민 로그인 · Visual Editor</h3>
+  <ul>
+    <li>올바른 비밀번호 로그인 → <strong>Edit Mode 버튼 헤더 표시</strong> 확인</li>
+    <li>잘못된 비밀번호 → <strong>오류 메시지</strong> 표시 확인</li>
+    <li>로그인 후 새로고침 → <strong>세션 유지</strong> 확인</li>
+    <li>Edit Mode 진입 → 편집 가능 요소 <strong>하이라이트</strong> 표시 확인</li>
+    <li>텍스트 클릭 편집 → 저장 → <strong>새로고침 후 유지</strong> 확인</li>
+    <li>이미지 클릭 → 업로드 → 저장 → <strong>반영</strong> 확인</li>
+    <li>테마 컬러 변경 → 저장 → <strong>전체 반영</strong> 확인</li>
+    <li>회사명 변경 → <strong>헤더·푸터 즉시 반영</strong> 확인</li>
+    <li>Edit Mode 종료 → 편집 UI <strong>비활성화</strong> 확인</li>
+    <li>로그아웃 → Edit Mode 버튼 <strong>사라짐</strong> 확인</li>
+  </ul>
+</div>
+
+<div class="manual-list">
+  <h3 style="color:#60a5fa;margin-bottom:8px">게시판 CRUD (어드민 대시보드)</h3>
+  <ul>
+    <li>공지사항 새 글 작성 → 발행 → <strong>/notice 목록에 표시</strong> 확인</li>
+    <li>글 상세 클릭 → <strong>상세 페이지 이동</strong> 확인</li>
+    <li>글 수정 → 저장 → <strong>상세 페이지 반영</strong> 확인</li>
+    <li>글 삭제 → <strong>확인 다이얼로그</strong> → 삭제 후 목록 제거 확인</li>
+    <li>리치텍스트 에디터: <strong>Bold, Italic, 이미지 삽입, 링크</strong> 동작 확인</li>
+    <li>FAQ 항목 추가 → 발행 → <strong>아코디언 동작</strong> 확인</li>
+    <li>포트폴리오 아이템 이미지 업로드 → <strong>/portfolio 갤러리 반영</strong> 확인</li>
+    <li>어드민 비밀번호 변경 → <strong>새 비밀번호 로그인</strong> 성공 확인</li>
+  </ul>
+</div>
+
+<div class="manual-list">
+  <h3 style="color:#60a5fa;margin-bottom:8px">문의 폼 · 공통 기능</h3>
+  <ul>
+    <li>문의폼 — 필드 비운 채 제출 → <strong>각 필드 오류 메시지</strong> 확인</li>
+    <li>문의폼 — 잘못된 이메일 형식 → <strong>이메일 오류</strong> 확인</li>
+    <li>문의폼 — 정상 제출 → <strong>성공 토스트</strong> + <strong>폼 초기화</strong> 확인</li>
+    <li>제출된 문의 → <strong>어드민 수신함</strong> 표시 확인</li>
+    <li>FAQ 아코디언 — 클릭 <strong>펼침/닫힘</strong> 확인</li>
+    <li>다크모드 토글 — 전환 + <strong>새로고침 후 유지</strong> 확인</li>
+    <li>모바일 375px — 햄버거 메뉴 <strong>열기/닫기</strong> 확인</li>
+    <li>모바일 — 전 페이지 <strong>가로 스크롤 없음</strong> 확인</li>
+    <li>/terms, /privacy — 브라우저에서 <strong>콘텐츠 정상 표시</strong> 확인</li>
+  </ul>
+</div>
+
+<!-- Per-template detail -->
+<h2>4. 템플릿별 특이사항</h2>
+<div class="template-grid">
+
+  <div class="t-card">
+    <div class="t-card-header">
+      <div>
+        <div class="t-name">temp01 — Z-Tech Solutions</div>
+        <div class="t-url">temp01.zpack.app</div>
+      </div>
+      <span class="t-status t-warn">⚠ 1건</span>
+    </div>
+    <ul class="t-list">
+      <li><span class="icon">✅</span> 전체 섹션 완전, GNB 6개 정상</li>
+      <li><span class="icon">✅</span> 모든 서브페이지 HTTP 200</li>
+      <li><span class="icon">✅</span> 메타태그 완전, og:image CDN URL</li>
+      <li><span class="icon">✅</span> robots.txt 정상 (admin-login 차단)</li>
+      <li><span class="icon">⚠️</span> FAQ 플레이스홀더 1개만 존재</li>
+      <li><span class="icon">❌</span> sitemap.xml 404</li>
+    </ul>
+  </div>
+
+  <div class="t-card">
+    <div class="t-card-header">
+      <div>
+        <div class="t-name">temp01-02 — Z-Tech Solutions</div>
+        <div class="t-url">temp01-02.zpack.app</div>
+      </div>
+      <span class="t-status t-warn">⚠ 1건</span>
+    </div>
+    <ul class="t-list">
+      <li><span class="icon">✅</span> 전체 섹션 완전, GNB 6개 정상</li>
+      <li><span class="icon">✅</span> 모든 서브페이지 HTTP 200</li>
+      <li><span class="icon">✅</span> 메타태그 완전</li>
+      <li><span class="icon">⚠️</span> FAQ 항목 없음 (빈 상태)</li>
+      <li><span class="icon">❌</span> sitemap.xml 404</li>
+    </ul>
+  </div>
+
+  <div class="t-card">
+    <div class="t-card-header">
+      <div>
+        <div class="t-name">temp01-03 — AmberCore</div>
+        <div class="t-url">temp01-03.zpack.app</div>
+      </div>
+      <span class="t-status" style="background:#1f0a0a;color:#f87171;border:1px solid #ef444430">🔴 P0 이슈</span>
+    </div>
+    <ul class="t-list">
+      <li><span class="icon">✅</span> 전체 섹션 완전</li>
+      <li><span class="icon">✅</span> FAQ 6개 항목 존재</li>
+      <li><span class="icon">❌</span> <strong>브랜드 불일치: 헤더="AmberCore", 본문="Z-Tech Solutions"</strong></li>
+      <li><span class="icon">⚠️</span> og:image가 /og-image.png 상대경로 (파일 존재 여부 확인 필요)</li>
+      <li><span class="icon">❌</span> sitemap.xml 404</li>
+    </ul>
+  </div>
+
+  <div class="t-card">
+    <div class="t-card-header">
+      <div>
+        <div class="t-name">temp01-04 — DigitalWorks</div>
+        <div class="t-url">temp01-04.zpack.app</div>
+      </div>
+      <span class="t-status t-warn">⚠ 2건</span>
+    </div>
+    <ul class="t-list">
+      <li><span class="icon">✅</span> GNB 6개, 서브페이지 모두 로드</li>
+      <li><span class="icon">✅</span> FAQ 3개 항목, /contact 폼 정상</li>
+      <li><span class="icon">⚠️</span> 메인: 비교 테이블 없음, 피처카드 4개 (디자인 의도 확인 필요)</li>
+      <li><span class="icon">⚠️</span> 메인: 타겟 세그먼트 섹션 없음</li>
+      <li><span class="icon">❌</span> sitemap.xml 404</li>
+    </ul>
+  </div>
+
+  <div class="t-card">
+    <div class="t-card-header">
+      <div>
+        <div class="t-name">temp01-05 — Z-Comm</div>
+        <div class="t-url">temp01-05.zpack.app</div>
+      </div>
+      <span class="t-status t-warn">⚠ 2건</span>
+    </div>
+    <ul class="t-list">
+      <li><span class="icon">✅</span> GNB 6개, 서브페이지 모두 로드</li>
+      <li><span class="icon">✅</span> FAQ 2개 (Z-Comm 제품 관련)</li>
+      <li><span class="icon">⚠️</span> 메인: 비교 테이블·기술스택 없음, 프로세스 3단계</li>
+      <li><span class="icon">⚠️</span> 메인 og:title이 "Z-Tech Solutions"로 고정 (Z-Comm 불일치)</li>
+      <li><span class="icon">❌</span> sitemap.xml 404</li>
+    </ul>
+  </div>
+
+  <div class="t-card">
+    <div class="t-card-header">
+      <div>
+        <div class="t-name">temp01-06 — Seoul Hanbit Hospital v1</div>
+        <div class="t-url">temp01-06.zpack.app</div>
+      </div>
+      <span class="t-status" style="background:#1f1a0a;color:#facc15;border:1px solid #ca8a0430">⚠ P1 이슈</span>
+    </div>
+    <ul class="t-list">
+      <li><span class="icon">✅</span> 병원 테마 히어로, 진료과목, CTA 정상</li>
+      <li><span class="icon">✅</span> /admin-login 정상</li>
+      <li><span class="icon">❌</span> <strong>FAQ 내용이 IT 개발사 내용 (병원 콘텐츠 아님)</strong></li>
+      <li><span class="icon">⚠️</span> og:image = temp01-06.zpack.app/og-image.png (staging URL)</li>
+      <li><span class="icon">❌</span> sitemap.xml 404</li>
+    </ul>
+  </div>
+
+  <div class="t-card">
+    <div class="t-card-header">
+      <div>
+        <div class="t-name">temp01-07 — Seoul Hanbit Hospital v2</div>
+        <div class="t-url">temp01-07.zpack.app</div>
+      </div>
+      <span class="t-status t-ok">✅ 양호</span>
+    </div>
+    <ul class="t-list">
+      <li><span class="icon">✅</span> 병원 특화 커스텀: Appointment, Doctors, Health News</li>
+      <li><span class="icon">✅</span> 메타태그 완전 (Twitter Card, keywords 포함)</li>
+      <li><span class="icon">✅</span> 테마컬러 보라색 (#7C3AED) 병원 테마 일관</li>
+      <li><span class="icon">✅</span> favicon 표시 확인</li>
+      <li><span class="icon">✅</span> GNB 모두 병원 특화 명칭으로 일관</li>
+      <li><span class="icon">❌</span> sitemap.xml 404</li>
+    </ul>
+  </div>
+
+  <div class="t-card">
+    <div class="t-card-header">
+      <div>
+        <div class="t-name">temp01-08 — Z-Tech Solutions</div>
+        <div class="t-url">temp01-08.zpack.app</div>
+      </div>
+      <span class="t-status t-warn">⚠ 1건</span>
+    </div>
+    <ul class="t-list">
+      <li><span class="icon">✅</span> 전체 섹션, GNB, 서브페이지 정상</li>
+      <li><span class="icon">✅</span> 메타태그 완전</li>
+      <li><span class="icon">⚠️</span> FAQ 항목 없음</li>
+      <li><span class="icon">❌</span> sitemap.xml 404</li>
+    </ul>
+  </div>
+
+  <div class="t-card">
+    <div class="t-card-header">
+      <div>
+        <div class="t-name">temp01-09 — Z-Tech Solutions</div>
+        <div class="t-url">temp01-09.zpack.app</div>
+      </div>
+      <span class="t-status t-warn">⚠ 1건</span>
+    </div>
+    <ul class="t-list">
+      <li><span class="icon">✅</span> 전체 섹션, GNB, 서브페이지 정상</li>
+      <li><span class="icon">✅</span> Global Presence 섹션, Awards 섹션 포함</li>
+      <li><span class="icon">⚠️</span> FAQ 항목 없음</li>
+      <li><span class="icon">❌</span> sitemap.xml 404</li>
+    </ul>
+  </div>
+
+  <div class="t-card">
+    <div class="t-card-header">
+      <div>
+        <div class="t-name">temp01-10 — Z-Tech Solutions (Bento)</div>
+        <div class="t-url">temp01-10.zpack.app</div>
+      </div>
+      <span class="t-status t-warn">⚠ 2건</span>
+    </div>
+    <ul class="t-list">
+      <li><span class="icon">✅</span> 벤토 그리드 레이아웃 정상</li>
+      <li><span class="icon">✅</span> GNB, 서브페이지 모두 정상</li>
+      <li><span class="icon">⚠️</span> FAQ 항목 없음</li>
+      <li><span class="icon">⚠️</span> og:image = temp01-10.zpack.app/og-image.png (staging URL)</li>
+      <li><span class="icon">❌</span> sitemap.xml 404</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- Action Items -->
+<h2>5. 조치 항목 요약</h2>
+<table style="min-width:600px">
+  <thead>
+    <tr>
+      <th style="width:60px">우선순위</th>
+      <th>조치 항목</th>
+      <th style="width:100px">대상</th>
+      <th style="width:80px">담당</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span class="tag tag-red">P0</span></td>
+      <td>sitemap.xml 생성 (next-sitemap 또는 app/sitemap.ts)</td>
+      <td>전체</td>
+      <td>개발팀</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-red">P0</span></td>
+      <td>temp01-03 AmberCore 브랜드 불일치 수정 (본문 Z-Tech → AmberCore)</td>
+      <td>temp01-03</td>
+      <td>디자인팀</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-yellow">P1</span></td>
+      <td>temp01-06 FAQ 내용 병원 콘텐츠로 교체 (예약/진료/위치/보험)</td>
+      <td>temp01-06</td>
+      <td>콘텐츠팀</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-yellow">P1</span></td>
+      <td>/terms, /privacy SSR 전환 (JS 없이 콘텐츠 접근 가능하게)</td>
+      <td>전체</td>
+      <td>개발팀</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-yellow">P1</span></td>
+      <td>temp01-06, temp01-10 og:image를 절대 CDN URL 또는 상대경로로 수정</td>
+      <td>temp01-06, 10</td>
+      <td>개발팀</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-yellow">P1</span></td>
+      <td>FAQ 시드 데이터 추가 — 전 템플릿 기본 FAQ 3~5개 등록</td>
+      <td>전체</td>
+      <td>콘텐츠팀</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-blue">P2</span></td>
+      <td>temp01-04, 05 메인 섹션 구성이 의도적 차이인지 확인</td>
+      <td>04, 05</td>
+      <td>디자인팀</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-blue">P2</span></td>
+      <td>블로그/채용/포트폴리오 샘플 데이터 추가 (첫인상 개선)</td>
+      <td>전체</td>
+      <td>콘텐츠팀</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-blue">P2</span></td>
+      <td>어드민 로그인·Visual Editor·CRUD·폼 제출·FAQ 아코디언·모바일 수동 테스트 진행</td>
+      <td>전체</td>
+      <td>QA팀</td>
+    </tr>
+  </tbody>
+</table>
+
+<div style="margin-top:32px;padding:16px 20px;background:#111118;border:1px solid #1e1e30;border-radius:10px;font-size:13px;color:#888;">
+  <strong style="color:#a78bff">테스트 방법론:</strong> 자동화 (WebFetch HTTP 접근) + 정적 분석으로 진행. 자바스크립트 실행이 필요한 기능(폼 제출, 아코디언, 어드민 로그인, Visual Editor CRUD, 반응형)은 수동 테스트 항목으로 분류.
+  체크리스트 원본: <a href="qa-checklist.html" style="color:#a78bff">qa-checklist.html</a>
+</div>
+
+</div>
+</body>
+</html>
