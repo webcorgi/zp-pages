@@ -31,84 +31,44 @@
     background-size:44px 44px;
   }
 
-  /* 상단 비주얼 영역 */
-  .visual {
-    position:relative; z-index:2;
-    display:flex; justify-content:center; align-items:center;
-    padding-top:40px; height:260px;
+  /* 전체 캔버스 중앙 텍스트 영역 */
+  .center-area {
+    position:absolute; inset:0; z-index:2;
+    display:flex; flex-direction:column;
+    justify-content:center; align-items:center;
+    text-align:center; padding:0 48px;
   }
 
-  /* 브라우저 목업 */
-  .browser {
-    width:360px; background:#1c1830;
-    border:1.5px solid rgba(108,71,255,.4);
-    border-radius:12px; overflow:hidden;
-    box-shadow:0 20px 60px rgba(0,0,0,.5), 0 0 0 1px rgba(108,71,255,.15);
+  /* 상단 작은 배지 */
+  .top-badge {
+    display:inline-flex; align-items:center; gap:6px;
+    background:rgba(108,71,255,.15); border:1px solid rgba(108,71,255,.35);
+    border-radius:100px; padding:6px 16px;
+    font-size:13px; font-weight:700; color:#A78BFF;
+    margin-bottom:28px;
   }
-  .browser-bar {
-    background:#14111f; padding:8px 14px;
-    display:flex; align-items:center; gap:6px;
-  }
-  .dot { width:8px; height:8px; border-radius:50%; }
-  .dot.r { background:#ff5f57; } .dot.y { background:#ffbd2e; } .dot.g { background:#28c840; }
-  .browser-url {
-    flex:1; margin-left:8px; background:rgba(255,255,255,.06);
-    border-radius:4px; padding:3px 10px; font-size:10px;
-    color:#666; font-family:monospace;
+  .top-badge .dot-anim {
+    width:7px; height:7px; background:#22c55e;
+    border-radius:50%; flex-shrink:0;
   }
 
-  /* 사이트 미리보기 */
-  .site-preview { padding:18px 20px 14px; }
-  .site-hero-text {
-    font-size:14px; font-weight:800; color:#fff; margin-bottom:6px; line-height:1.3;
+  /* 메인 카피 */
+  .main-copy {
+    font-size:68px; font-weight:900; color:#fff;
+    letter-spacing:-3px; line-height:1.1;
+    margin-bottom:24px;
   }
-  .site-hero-text em { color:#A78BFF; font-style:normal; }
-  .site-sub { font-size:9px; color:#555; margin-bottom:12px; }
-  .site-tags { display:flex; gap:5px; margin-bottom:12px; flex-wrap:wrap; }
-  .site-tag { background:rgba(108,71,255,.15); border:1px solid rgba(108,71,255,.25); color:#A78BFF; font-size:8px; padding:2px 8px; border-radius:100px; }
-  .site-divider { height:1px; background:#222; margin-bottom:10px; }
-  .site-blocks { display:flex; gap:8px; }
-  .site-block { flex:1; height:28px; background:rgba(255,255,255,.04); border-radius:6px; border:1px solid #222; }
-  .site-block.purple { background:rgba(108,71,255,.12); border-color:rgba(108,71,255,.2); }
+  .main-copy em { color:#A78BFF; font-style:normal; }
 
-  /* 플로팅 뱃지들 */
-  .badge-float {
-    position:absolute; background:#1c1830;
-    border:1px solid rgba(108,71,255,.35);
-    border-radius:10px; padding:8px 14px;
-    font-size:11px; font-weight:700;
-    box-shadow:0 8px 24px rgba(0,0,0,.4);
-    white-space:nowrap;
+  /* 서브 태그들 */
+  .tags {
+    display:flex; gap:8px; flex-wrap:wrap; justify-content:center;
   }
-  .badge-float.b1 { top:50px; right:100px; color:#22c55e; border-color:rgba(34,197,94,.3); }
-  .badge-float.b2 { bottom:20px; left:68px; color:#A78BFF; }
-  .badge-float .dot-anim {
-    display:inline-block; width:6px; height:6px; background:#22c55e;
-    border-radius:50%; margin-right:6px; vertical-align:middle;
+  .tag {
+    background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1);
+    border-radius:100px; padding:5px 14px;
+    font-size:13px; font-weight:600; color:#aaa;
   }
-
-  /* 하단 텍스트 영역 */
-  .text-area {
-    position:relative; z-index:2;
-    height:228px;
-    display:flex; flex-direction:column; justify-content:center; align-items:center;
-    text-align:center; padding:0 60px;
-    border-top:1px solid rgba(108,71,255,.12);
-    background:linear-gradient(to bottom, rgba(108,71,255,.04), rgba(0,0,0,.0));
-  }
-  .main-copy-1 {
-    font-size:28px; font-weight:900; color:#A78BFF;
-    letter-spacing:-0.5px; margin-bottom:8px;
-  }
-  .divider-line {
-    width:40px; height:2px; background:rgba(108,71,255,.4);
-    border-radius:100px; margin:0 auto 16px;
-  }
-  .main-copy-2 {
-    font-size:36px; font-weight:900; color:#fff;
-    letter-spacing:-1.5px; line-height:1.2;
-  }
-  .main-copy-2 em { color:#A78BFF; font-style:normal; }
 
   /* 로고 */
   .logo {
@@ -126,40 +86,18 @@
   <div class="bg-grid"></div>
   <div class="bg-glow"></div>
 
-  <!-- 상단 비주얼 -->
-  <div class="visual">
-    <div class="browser">
-      <div class="browser-bar">
-        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
-        <div class="browser-url">my-landing.vercel.app</div>
-      </div>
-      <div class="site-preview">
-        <div class="site-hero-text">내 랜딩페이지,<br><em>지금 바로 시작</em></div>
-        <div class="site-sub">코딩 없이 · 구독료 0원 · 평생 내 소유</div>
-        <div class="site-tags">
-          <span class="site-tag">✓ 코딩 불필요</span>
-          <span class="site-tag">✓ 무료 호스팅</span>
-          <span class="site-tag">✓ 5분 완성</span>
-        </div>
-        <div class="site-divider"></div>
-        <div class="site-blocks">
-          <div class="site-block purple"></div>
-          <div class="site-block"></div>
-          <div class="site-block"></div>
-        </div>
-      </div>
+  <!-- 중앙 텍스트 -->
+  <div class="center-area">
+    <div class="top-badge">
+      <div class="dot-anim"></div>
+      코딩 몰라도 OK · 구독료 0원
     </div>
-
-    <!-- 플로팅 뱃지 -->
-    <div class="badge-float b1"><span class="dot-anim"></span>배포 완료!</div>
-    <div class="badge-float b2">🔑 라이선스 키 1개</div>
-  </div>
-
-  <!-- 하단 텍스트 -->
-  <div class="text-area">
-    <div class="main-copy-1">코딩 몰라도 OK</div>
-    <div class="divider-line"></div>
-    <div class="main-copy-2">5분이면 내<br><em>홈페이지</em> 완성</div>
+    <div class="main-copy">5분이면 내<br><em>홈페이지</em> 완성</div>
+    <div class="tags">
+      <span class="tag">✓ 코딩 불필요</span>
+      <span class="tag">✓ 무료 호스팅</span>
+      <span class="tag">✓ 평생 내 소유</span>
+    </div>
   </div>
 
   <div class="logo">Zero<span>Pack</span></div>
